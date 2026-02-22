@@ -1,0 +1,19 @@
+# API Keys - NEVER commit this
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Database (auto-generated, too large)
+data/processed/
+data/exports/
+chroma_db/
+
+# VS Code
+.vscode/
+
+# Mac
+.DS_Store
