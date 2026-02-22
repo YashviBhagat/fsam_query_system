@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "paper_name": "Restirring and Reheating Effects on Microstructural Evolution of Al–Zn–Mg–Cu Alloy during Underwater Friction Stir Additive Manufacturing",
+    "sample_id": "7A04-T6 underwater FSAM (multi-pass)"
+  },
+
+  "material_input": {
+    "base_alloy": "7A04",
+    "starting_temper": "T6",
+    "temper_condition": "rolled",
+    "elemental_composition_wt_pct": {
+      "Zn": "6",
+      "Mg": "2.6",
+      "Cu": "1.5",
+      "Al": 89.9
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Underwater friction stir additive manufacturing with multi-pass restirring and reheating",
+    "rotation_speed": "700 r/min",
+    "traverse_velocity": "160 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": "3.5 mm",
+    "build_direction": "vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": "2.5°"
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": null,
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": "non-consumable",
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "underwater",
+    "cooling_medium": "water",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "0.87–1.97 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "DRX/SRX",
+    "precipitate_condition": "Coarse grain-boundary precipitates",
+    "second_phase_particles": "Mg(ZnAlCu)2",
+    "phase_transformation_details": "Dynamic recrystallization during stirring and static recrystallization during reheating",
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "115-174 HV",
+    "yield_strength": null,
+    "ultimate_tensile_strength": null,
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

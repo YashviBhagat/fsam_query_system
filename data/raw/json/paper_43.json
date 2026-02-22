@@ -1,0 +1,82 @@
+{
+    "metadata": {
+      "paper_name": "Interface stair-like design and repair performance of Al-Zn-Mg-Cu aluminum alloy based on additive friction stir deposition",
+      "sample_id": "Vstair-AA7075"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA7075",
+      "starting_temper": "T6",
+      "temper_condition": "rolled",
+      "elemental_composition_wt_pct": {
+        "Zn": "5.5",
+        "Mg": "2.4",
+        "Cu": "1.6",
+        "Fe": "0.50",
+        "Si": "0.40",
+        "Mn": "0.30",
+        "Ti": "0.20",
+        "Al": "89.10"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "rectangular feedstock",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "50.9 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Solid-state repair of prefabricated V- and U-shaped grooves using additive friction stir deposition",
+      "rotation_speed": "450 rpm",
+      "traverse_velocity": "128.3 mm/min",
+      "feed_rate_or_pitch": "51.3 mm/min",
+      "layer_thickness": "2.9 mm",
+      "build_direction": "BD",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": null,
+      "shoulder_feature": null,
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "hollow",
+      "pin_features": "teardrop stirring head"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": "400 °C",
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "room temperature",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "3.07 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Coarse",
+      "second_phase_particles": "MgZn2",
+      "phase_transformation_details": "CDRX and GDRX coexistence",
+      "defect_type": "Volume defects",
+      "grain_refinement_factor": "93.9 %"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "70.13 HV",
+      "yield_strength": null,
+      "ultimate_tensile_strength": "294 MPa",
+      "ductility_percentage": "8.9 %",
+      "Elongation_percentage": "8.9 %"
+    }
+  }
+  

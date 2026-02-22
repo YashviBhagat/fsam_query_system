@@ -1,0 +1,108 @@
+{
+  "metadata": {
+    "paper_name": "Investigation on microstructural evolution and property variation along building direction in friction stir additive manufactured Al–Zn–Mg alloy",
+    "sample_id": "12-layer FSAM build using 7N01-T4 sheets"
+  },
+
+  "material_input": {
+    "base_alloy": "7N01",
+    "starting_temper": "T4",
+    "temper_condition": "sheet",
+    "elemental_composition_wt_pct": {
+      "Zn": "4.34",
+      "Mg": "1.10",
+      "Cu": "0.14",
+      "Mn": "0.40",
+      "Cr": "0.15",
+      "Ti": "0.04",
+      "Fe": "0.104",
+      "Si": "0.028",
+      "Al": "93.698"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "sheet",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Multi-layer friction stir additive manufacturing using repeated friction stir lap welding of 4-mm-thick sheets to produce a 12-layer build with a height of 42 mm",
+    "rotation_speed": "1200 rpm",
+    "traverse_velocity": "60 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": "4 mm",
+    "build_direction": "Z",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "tool steel",
+    "shoulder_diameter": "15 mm",
+    "shoulder_feature": null,
+    "pin_diameter_root": "6 mm",
+    "pin_diameter_tip": "5 mm",
+    "pin_length": "5 mm",
+    "pin_geometry": "stepped spiral",
+    "pin_features": "right-handed stepped spiral pin"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "420–500 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": {
+      "top_region": "2.86 µm",
+      "middle_region": "3.02 µm",
+      "middle_overlapping_interface": "2.48 µm",
+      "bottom_region": "3.23 µm"
+    },
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "CDRX",
+    "precipitate_condition": "GP zones, η′, η",
+    "second_phase_particles": "η (MgZn2), η′, GP-I, GP-II",
+    "phase_transformation_details": "SSSS → GP zones → η′ → η",
+    "defect_type": "hook, kissing bond",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": {
+      "5_days_NA": {
+        "top": "92.7 HV",
+        "bottom": "73.6 HV"
+      },
+      "30_days_NA": {
+        "top": "101.2 HV",
+        "bottom": "83.3 HV"
+      },
+      "60_days_NA": {
+        "top": "106.2 HV",
+        "bottom": "88.7 HV"
+      }
+    },
+    "yield_strength": null,
+    "ultimate_tensile_strength": {
+      "5_days_NA": "294.0 MPa",
+      "180_days_NA": "352.7 MPa",
+      "artificial_aging_120C_24h": "303.8 MPa"
+    },
+    "ductility_percentage": null,
+    "Elongation_percentage": {
+      "5_days_NA": "13.1 %",
+      "180_days_NA": "8.4–22.3 %",
+      "artificial_aging_120C_24h": "18.8 %"
+    }
+  }
+}

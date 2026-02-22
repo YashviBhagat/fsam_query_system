@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "paper_name": "Morphological and microstructural investigation of the non-planar interface formed in solid-state metal additive manufacturing by additive friction stir deposition",
+    "sample_id": "AFSD_T_interface_AA2024_AA6061"
+  },
+
+  "material_input": {
+    "base_alloy": "AA2024 / AA6061",
+    "starting_temper": null,
+    "temper_condition": null,
+    "elemental_composition_wt_pct": {},
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "Additive friction stir deposition used to fabricate solid-state multilayer structures with a non-planar T-shaped interface between deposited AA2024 and AA6061 substrate",
+    "rotation_speed": null,
+    "traverse_velocity": null,
+    "feed_rate_or_pitch": null,
+    "layer_thickness": null,
+    "build_direction": "vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": "hollow",
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "3–6 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "DRX",
+    "precipitate_condition": "Dissolved",
+    "second_phase_particles": "Al2Cu",
+    "phase_transformation_details": "Severe plastic deformation and material flow during deposition result in folding and interlocking of layers, forming a non-planar T-shaped interface with dynamically recrystallized equiaxed grains",
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": null,
+    "yield_strength": null,
+    "ultimate_tensile_strength": null,
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

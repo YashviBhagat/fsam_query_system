@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "paper_name": "Development of Carbide-Reinforced Al-7075 Multi-Layered Composites via Friction Stir Additive Manufacturing",
+    "sample_id": "Al-7075/SiC and Al-7075/TiC seven-layer FSAM composites"
+  },
+
+  "material_input": {
+    "base_alloy": "Al-7075",
+    "starting_temper": "T651",
+    "temper_condition": "rolled",
+    "elemental_composition_wt_pct": {},
+    "reinforcement_material": "SiC; TiC",
+    "reinforcement_vol_pct": "5 vol.%",
+    "starting_material_form": "plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Seven-layer friction stir additive manufacturing of carbide-reinforced Al-7075 using groove-based nanoparticle incorporation and forced air cooling",
+    "rotation_speed": "1000 rpm",
+    "traverse_velocity": "20 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": null,
+    "build_direction": "vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": "2.5°"
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "H13 steel",
+    "shoulder_diameter": "24 mm",
+    "shoulder_feature": "flat",
+    "pin_diameter_root": "8 mm",
+    "pin_diameter_tip": "6 mm",
+    "pin_length": "8 mm",
+    "pin_geometry": "taper-threaded",
+    "pin_features": "threaded"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": "5 kN",
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "forced cooling",
+    "cooling_medium": "compressed air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "2.14 µm (SiC, as-welded); 1.25 µm (TiC, as-welded); 2.30 µm (SiC, PWHT); 1.30 µm (TiC, PWHT)",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "DRX",
+    "precipitate_condition": "Overaged (as-welded); Refined (PWHT)",
+    "second_phase_particles": "SiC; TiC",
+    "phase_transformation_details": "Precipitate dissolution during FSAM followed by reprecipitation during PWHT",
+    "defect_type": "particle agglomeration",
+    "grain_refinement_factor": "95 %"
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "88.6 HV (SiC, as-welded); 93.7 HV (TiC, as-welded); 155.5 HV (SiC, PWHT); 159.12 HV (TiC, PWHT)",
+    "yield_strength": null,
+    "ultimate_tensile_strength": "236.34 MPa (SiC, as-welded); 263.02 MPa (TiC, as-welded); 286.49 MPa (SiC, PWHT); 313.46 MPa (TiC, PWHT)",
+    "ductility_percentage": null,
+    "Elongation_percentage": "7.5 % (SiC, as-welded); 11.14 % (TiC, PWHT)"
+  }
+}

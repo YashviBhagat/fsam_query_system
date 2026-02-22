@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "paper_name": "Enhancing the mechanical performance of Al–Zn–Mg alloy builds fabricated via underwater friction stir additive manufacturing and post-processing aging",
+    "sample_id": "7N01-T4 underwater FSAM (12 layers)"
+  },
+
+  "material_input": {
+    "base_alloy": "7N01",
+    "starting_temper": "T4",
+    "temper_condition": "sheet",
+    "elemental_composition_wt_pct": {
+      "Zn": 4.66,
+      "Mg": 1.09,
+      "Cu": 0.12,
+      "Mn": 0.32,
+      "Cr": 0.20,
+      "Ti": 0.06,
+      "Fe": 0.10,
+      "Si": 0.03,
+      "Al": 93.42
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "sheet",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Underwater friction stir additive manufacturing with natural aging",
+    "rotation_speed": "1200 rpm",
+    "traverse_velocity": "80 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": "3.5 mm",
+    "build_direction": "vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": "15 mm",
+    "shoulder_feature": "flat",
+    "pin_diameter_root": "6 mm",
+    "pin_diameter_tip": "6 mm",
+    "pin_length": "5 mm",
+    "pin_geometry": "cylindrical",
+    "pin_features": "smooth"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "300–325 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": "25 °C",
+    "cooling_method": "water cooling",
+    "cooling_medium": "water",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "2.4–2.8 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "DRX",
+    "precipitate_condition": "GP zones dominant",
+    "second_phase_particles": "η (MgZn2)",
+    "phase_transformation_details": "GP-I and GP-II zones with suppressed η precipitation under water cooling",
+    "defect_type": "kissing bond",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "105 HV",
+    "yield_strength": "322 MPA",
+    "ultimate_tensile_strength": "398–400 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": "19.2–35.1 %"
+  }
+}

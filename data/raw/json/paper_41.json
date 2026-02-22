@@ -1,0 +1,85 @@
+{
+    "metadata": {
+      "paper_name": "Stress Corrosion Cracking of AA7075 Aluminum Alloy Processed via Additive Friction Stir Deposition",
+      "sample_id": "AFSD-AA7075"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA7075",
+      "starting_temper": "T6",
+      "temper_condition": "as-processed",
+      "elemental_composition_wt_pct": {
+        "Si": "0.2",
+        "Fe": "0.25",
+        "Cu": "1.6",
+        "Mn": "0.15",
+        "Mg": "2.5",
+        "Cr": "0.2335",
+        "Zn": "5.6",
+        "Ti": "0.1",
+        "Ni": "0.01",
+        "Zr": "0.05",
+        "Al": "89.3065"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "plate-derived rod",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Additive Friction Stir Deposition using rotating hollow tool and feedstock rod",
+      "rotation_speed": "225 rpm",
+      "traverse_velocity": "125 mm/min",
+      "feed_rate_or_pitch": "68.85 mm/min",
+      "layer_thickness": "2 mm",
+      "build_direction": "Z",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "38.1 mm",
+      "shoulder_feature": "teardrop protrusions",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "hollow",
+      "pin_features": "four teardrop protrusions"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "room temperature",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "3.81 ± 2 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Coarse",
+      "second_phase_particles": "Cu-enriched",
+      "phase_transformation_details": null,
+      "defect_type": null,
+      "grain_refinement_factor": null
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "72 HV",
+      "yield_strength": "158 MPa",
+      "ultimate_tensile_strength": "236 MPa",
+      "ductility_percentage": "6.0 %",
+      "Elongation_percentage": "6.0 %"
+    }
+  }
+  

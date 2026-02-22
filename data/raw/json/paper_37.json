@@ -1,0 +1,76 @@
+{
+    "metadata": {
+      "paper_name": "In-situ monitoring of additive friction stir deposition of AA6061: Effect of layer thickness on the microstructure and mechanical properties :contentReference[oaicite:0]{index=0}",
+      "sample_id": "AA6061-AFSD-t(0.5-1.5)"
+    },
+    "material_input": {
+      "base_alloy": "AA6061",
+      "starting_temper": "T6",
+      "temper_condition": null,
+      "elemental_composition_wt_pct": {
+        "Mg": 1.1,
+        "Si": 0.6,
+        "Cu": 0.4,
+        "Cr": 0.2,
+        "Zn": "<0.2",
+        "Mn": "<0.2",
+        "Fe": 0.7,
+        "Al": "96.6–97.0"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "rectangular bar 15 mm × 15 mm × 350 mm",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Multi-layer additive friction stir deposition of AA6061 using process-aware kit with hollow tool; to-and-fro deposition along LD over 150 mm per pass; layer thickness controlled by feed rate",
+      "rotation_speed": "500 rpm",
+      "traverse_velocity": "140 mm/min",
+      "feed_rate_or_pitch": "11.7–35.0 mm/min",
+      "layer_thickness": "0.5, 1.0, 1.5 mm",
+      "build_direction": "BD",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "32 mm",
+      "shoulder_feature": "hollow; without protrusions",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": null,
+      "pin_features": null
+    },
+    "physics_and_environment": {
+      "peak_temperature_recorded": "466.2–515.1 ℃",
+      "axial_force": "27.8–40.3 kN",
+      "torque": "38.4–53.2 Nm",
+      "ambient_temperature": "25 ℃",
+      "cooling_method": "natural cooling",
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+    "microstructure_outputs": {
+      "final_grain_size": "7.0–9.2 μm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Dissolved",
+      "second_phase_particles": null,
+      "phase_transformation_details": null,
+      "defect_type": "Porosity",
+      "grain_refinement_factor": null
+    },
+    "mechanical_outputs": {
+      "measured_hardness": "43.8–46.8 HV0.5 (500 g, 10 s)",
+      "yield_strength": "79.7–106.0 MPa",
+      "ultimate_tensile_strength": "139.4–171.2 MPa",
+      "ductility_percentage": null,
+      "Elongation_percentage": "28.1–37.0 %"
+    }
+  }
+  

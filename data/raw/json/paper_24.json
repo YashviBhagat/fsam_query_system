@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "paper_name": "Investigating multi-scale heterogeneity in multi-layer additive friction stir deposition of high-strength aluminum alloys",
+    "sample_id": "AA7075_AFSD_Deposited"
+  },
+
+  "material_input": {
+    "base_alloy": "AA7075",
+    "starting_temper": "T6",
+    "temper_condition": "AFSD-modified (overaged)",
+    "elemental_composition_wt_pct": {},
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "9.5 mm × 9.5 mm square rod",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "Multi-layer additive friction stir deposition",
+    "rotation_speed": null,
+    "traverse_velocity": "100 mm/min",
+    "feed_rate_or_pitch": "60 mm/min",
+    "layer_thickness": null,
+    "build_direction": "BD",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "H13 steel",
+    "shoulder_diameter": "38 mm",
+    "shoulder_feature": "Flat",
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "2.5–4.1 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "Dynamic",
+    "precipitate_condition": "Overaged",
+    "second_phase_particles": "IMCs",
+    "phase_transformation_details": "η′ to η transformation",
+    "defect_type": "None",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "90–140 HV",
+    "yield_strength": "161–322 MPa",
+    "ultimate_tensile_strength": "322–443 MPa",
+    "ductility_percentage": "16–23 %",
+    "Elongation_percentage": "16–23 %"
+  }
+}

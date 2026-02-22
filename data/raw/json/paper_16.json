@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "paper_name": "Additive Friction Stir-Enabled Solid-State Additive Manufacturing for the Repair of 7075 Aluminum Alloy",
+    "sample_id": "AA7075-T651 AFSD repair (holes and grooves)"
+  },
+
+  "material_input": {
+    "base_alloy": "AA7075",
+    "starting_temper": "T651",
+    "temper_condition": "rolled",
+    "elemental_composition_wt_pct": {
+      "Al": 92.66,
+      "Zn": 3.26,
+      "Mg": 2.87,
+      "Cu": 0.22,
+      "Cr": 0.21,
+      "Mn": 0.24,
+      "Si": 0.18,
+      "Fe": 0.20,
+      "Ti": 0.046,
+      "Other": 0.0022
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": "hundreds of µm"
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "Additive friction stir deposition for repair of through-holes and long grooves using continuous material feeding",
+    "rotation_speed": "400 RPM",
+    "traverse_velocity": "0.32 mm/s; 0.42 mm/s",
+    "feed_rate_or_pitch": "0.1 mm/s; 0.06 mm/s",
+    "layer_thickness": "0.76 mm",
+    "build_direction": null,
+    "interlayer_dwell_time": "3 min",
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": null,
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "80–90% of melting temperature",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "3.4 ± 0.7 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "CDRX",
+    "precipitate_condition": "Dissolved",
+    "second_phase_particles": null,
+    "phase_transformation_details": "Dynamic recovery followed by continuous dynamic recrystallization during deposition",
+    "defect_type": "voids; kissing bonds",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "140–172 HV",
+    "yield_strength": null,
+    "ultimate_tensile_strength": null,
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

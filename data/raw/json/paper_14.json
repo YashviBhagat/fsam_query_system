@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "paper_name": "Wire-based friction stir additive manufacturing towards isotropic high-strength-ductility Al-Mg alloys",
+    "sample_id": "Al-7Mg wire W-FSAM deposition"
+  },
+
+  "material_input": {
+    "base_alloy": "Al-7Mg",
+    "starting_temper": null,
+    "temper_condition": null,
+    "elemental_composition_wt_pct": {
+      "Mg": 7.55,
+      "Al": 92.45
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "wire",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Wire-based friction stir additive manufacturing (W-FSAM) using a rotational tool and a stationary barrel; process steps: shearing, thermo-plasticisation, deposition",
+    "rotation_speed": "1200 rpm",
+    "traverse_velocity": "600 mm/min",
+    "feed_rate_or_pitch": "5 kg/h",
+    "layer_thickness": "0.9 mm",
+    "build_direction": "vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": "stationary barrel",
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": "2.0 mm",
+    "pin_geometry": null,
+    "pin_features": "rotational screw; rotational pin"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": "6 kN",
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "1.27 ± 0.64 µm (top); 1.27 ± 0.69 µm (bottom)",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "DRX",
+    "precipitate_condition": "Refined",
+    "second_phase_particles": "Mn-rich; Mg-rich",
+    "phase_transformation_details": "Supersaturated solid solution; only Al phase detected by XRD",
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": null,
+    "yield_strength": "263 ± 9 MPa (travelling); 269 ± 2 MPa (deposition)",
+    "ultimate_tensile_strength": "415 ± 11 MPa (travelling); 401 ± 3 MPa (deposition)",
+    "ductility_percentage": null,
+    "Elongation_percentage": "31.0 ± 2.0 % (travelling); 20.0 ± 2.0 % (deposition)"
+  }
+}

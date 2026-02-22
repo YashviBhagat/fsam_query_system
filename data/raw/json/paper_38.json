@@ -1,0 +1,78 @@
+{
+    "metadata": {
+      "paper_name": "Nanostructure Evolution in AA7075 Alloy Produced by Solid State Additive Manufacturing – Additive Friction Stir - Deposition",
+      "sample_id": "AA7075-AFSD-as-deposited"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA7075",
+      "starting_temper": "T651",
+      "temper_condition": null,
+      "elemental_composition_wt_pct": {
+        "Zn": 5.6,
+        "Mg": 2.6,
+        "Cu": 1.6,
+        "Al": 90.2
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "feedstock rod",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "AA7075-T651 feedstock rod deposited onto AA7075 rolled plate substrate with a milled groove (repair); hollow rotating tool; layer-by-layer deposition",
+      "rotation_speed": "225 RPM",
+      "traverse_velocity": "50.8 mm/min",
+      "feed_rate_or_pitch": "50.8 mm/min",
+      "layer_thickness": null,
+      "build_direction": null,
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": null,
+      "shoulder_feature": "hollow",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": null,
+      "pin_features": null
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": null,
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": null,
+      "grain_morphology": null,
+      "recrystallization_type": null,
+      "precipitate_condition": null,
+      "second_phase_particles": "MgZn2(η), MgZn2(η'), (AlZn)Mg4Zn10, Al2CuMg",
+      "phase_transformation_details": "Heat-treatment schedule: solutionizing 490ºC for 1 hr; water quench; age hardening 120ºC for 24 hr",
+      "defect_type": null,
+      "grain_refinement_factor": null
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": null,
+      "yield_strength": null,
+      "ultimate_tensile_strength": null,
+      "ductility_percentage": null,
+      "Elongation_percentage": null
+    }
+  }
+  

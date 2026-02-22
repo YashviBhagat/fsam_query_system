@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "paper_name": "Additive friction stir deposition induced stress ripples in aluminum alloy",
+    "sample_id": "AA6061_AFSD_linear_speed_variation"
+  },
+
+  "material_input": {
+    "base_alloy": "AA6061",
+    "starting_temper": "T6",
+    "temper_condition": "T6",
+    "elemental_composition_wt_pct": {},
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "Commercial AA6061-T6 plates and feed rods",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "Additive friction stir deposition performed on a MELD machine; feed rod loaded into center bore of rotating tool; frictional heating softens feed rod and material is plastically extruded and deposited while tool translates linearly",
+    "rotation_speed": "200 rpm",
+    "traverse_velocity": "8–14 IPM",
+    "feed_rate_or_pitch": "152 mm/min",
+    "layer_thickness": "1 mm",
+    "build_direction": null,
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": null,
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": "Room temperature",
+    "cooling_method": "Natural convection",
+    "cooling_medium": "Air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": null,
+    "grain_morphology": null,
+    "recrystallization_type": null,
+    "precipitate_condition": null,
+    "second_phase_particles": null,
+    "phase_transformation_details": null,
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": null,
+    "yield_strength": null,
+    "ultimate_tensile_strength": null,
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

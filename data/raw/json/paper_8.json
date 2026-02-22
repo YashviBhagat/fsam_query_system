@@ -1,0 +1,79 @@
+{
+  "metadata": {
+    "paper_name": "Experimental and numerical studies on fabrication of nanoparticle reinforced aluminum matrix composites by friction stir additive manufacturing",
+    "sample_id": "AA6061-T6/Al2O3 (Case 1: 8–10 nm; Case 2: 30–50 nm)"
+  },
+
+  "material_input": {
+    "base_alloy": "AA6061-T6",
+    "starting_temper": "T6",
+    "temper_condition": null,
+    "elemental_composition_wt_pct": {
+      "Al": "97.93",
+      "Mg": "0.88",
+      "Si": "0.61",
+      "Cu": "0.23",
+      "Fe": "0.17",
+      "Mn": "0.04"
+    },
+    "reinforcement_material": "Al2O3",
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "slotted plates + cover plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Stacked plates (200 mm × 110 mm × 4 mm slotted plates; 200 mm × 110 mm × 2 mm cover plate); slot size 1.5 mm (width) × 2 mm (depth); re-stirring on second layer",
+    "rotation_speed": "1000 rev/min",
+    "traverse_velocity": "100 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": null,
+    "build_direction": null,
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "H13 steel",
+    "shoulder_diameter": "24 mm",
+    "shoulder_feature": null,
+    "pin_diameter_root": "6 mm",
+    "pin_diameter_tip": "8 mm",
+    "pin_length": "8 mm",
+    "pin_geometry": "conical",
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "408 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": "20 °C",
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "11.53–15.01 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": null,
+    "precipitate_condition": "Mg2Si",
+    "second_phase_particles": "Al2O3 nanoparticles",
+    "phase_transformation_details": null,
+    "defect_type": "defect-free",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "71.93–88.53 HV",
+    "yield_strength": "168.5338–222.0424 MPa",
+    "ultimate_tensile_strength": null,
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

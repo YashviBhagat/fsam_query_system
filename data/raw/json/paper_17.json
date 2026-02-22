@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "paper_name": "Parameter Optimization for Dissimilar Aluminum Alloys Joined Using Friction Stir Additive Manufacturing: A Screening Study",
+    "sample_id": "Al6061-T6 / Al7075-T6 dissimilar FSAM (L9 Taguchi)"
+  },
+
+  "material_input": {
+    "base_alloy": "Al6061-T6 / Al7075-T6",
+    "starting_temper": "T6",
+    "temper_condition": "rolled",
+    "elemental_composition_wt_pct": {},
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Dissimilar aluminum alloy friction stir additive manufacturing using a 3-factor L9 Taguchi experimental design with alternating Al6061 and Al7075 plates",
+    "rotation_speed": "1100 rpm; 1150 rpm; 1200 rpm",
+    "traverse_velocity": "30 mm/min; 35 mm/min; 40 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": "3 mm",
+    "build_direction": "vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": "1.0°; 1.5°; 2.0°"
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "H13 steel",
+    "shoulder_diameter": "24 mm",
+    "shoulder_feature": "flat",
+    "pin_diameter_root": "6 mm",
+    "pin_diameter_tip": "8 mm",
+    "pin_length": "4 mm",
+    "pin_geometry": "conical",
+    "pin_features": "threaded"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": "20 kN",
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": null,
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "DRX",
+    "precipitate_condition": "Fragmented",
+    "second_phase_particles": "MgZn2; AlZnMgCu; AlMg2Si",
+    "phase_transformation_details": "Dynamic recrystallization in stir zone with onion-ring structure and mixed material flow from Al6061 and Al7075 layers",
+    "defect_type": "hooks; kissing bonds",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "69.5–135.2 HV",
+    "yield_strength": null,
+    "ultimate_tensile_strength": "287–336 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

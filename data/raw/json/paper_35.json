@@ -1,0 +1,82 @@
+{
+    "metadata": {
+      "paper_name": "Microstructural characterization and mechanical properties of AlMg alloy fabricated by additive friction stir deposition :contentReference[oaicite:0]{index=0}",
+      "sample_id": "5B70-AFSD-Deposit"
+    },
+  
+    "material_input": {
+      "base_alloy": "5B70 Al alloy",
+      "starting_temper": null,
+      "temper_condition": null,
+      "elemental_composition_wt_pct": {
+        "Mg": 6.15,
+        "Mn": 0.31,
+        "Sc": 0.30,
+        "Zr": 0.15,
+        "Ti": 0.027,
+        "Fe": 0.09,
+        "Si": 0.068,
+        "Al": 92.905
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "rod",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Single-layer deposition of AA5B70 feedstock rod onto AA5B70 substrate using hollow rotating tool under load control; translating along rolling direction; stand-off distance maintained constant",
+      "rotation_speed": "1500 r/min",
+      "traverse_velocity": "50 mm/min",
+      "feed_rate_or_pitch": null,
+      "layer_thickness": "1 mm",
+      "build_direction": null,
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "28 mm",
+      "shoulder_feature": "hollow",
+      "pin_diameter_root": "14 mm",
+      "pin_diameter_tip": "14 mm",
+      "pin_length": null,
+      "pin_geometry": "hollow",
+      "pin_features": null
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "room temperature",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": null,
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": null,
+      "second_phase_particles": null,
+      "phase_transformation_details": null,
+      "defect_type": "Porosity",
+      "grain_refinement_factor": null
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": null,
+      "yield_strength": "210–260 MPa",
+      "ultimate_tensile_strength": "276–350 MPa",
+      "ductility_percentage": null,
+      "Elongation_percentage": "22–27 %"
+    }
+  }
+  

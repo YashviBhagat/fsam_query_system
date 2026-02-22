@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "paper_name": "Exploring temperature-controlled friction stir powder additive manufacturing process for multi-layer deposition of aluminum alloys",
+    "sample_id": "AA6061_FSPAM_3layer_temp_controlled"
+  },
+
+  "material_input": {
+    "base_alloy": "AA6061",
+    "starting_temper": "T4",
+    "temper_condition": "Precipitation-hardened",
+    "elemental_composition_wt_pct": {
+      "Mg": "0.8–1.2 wt%",
+      "Si": "0.4–0.8 wt%",
+      "Fe": "≤0.6 wt%",
+      "Cr": "0.04–0.35 wt%",
+      "Cu": "0.15–0.4 wt%",
+      "Mn": "≤0.15 wt%",
+      "Zn": "≤0.25 wt%",
+      "Al": "96.9–97.9 wt%"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "Al 6061 powder",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": "58 ± 20 µm"
+  },
+
+  "process_parameters": {
+    "process_category": "FSPAM",
+    "process_description": "Multi-layer deposition of Al 6061 powder using temperature-controlled friction stir powder additive manufacturing with external heating",
+    "rotation_speed": "1200 rpm",
+    "traverse_velocity": "25 mm/min",
+    "feed_rate_or_pitch": "460 mm³/min",
+    "layer_thickness": "0.5 ± 0.05 mm",
+    "build_direction": "Vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": "6°"
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "H13 tool steel",
+    "shoulder_diameter": "22 mm",
+    "shoulder_feature": "Circumferential and radial grooves",
+    "pin_diameter_root": "6 mm",
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": "Conical",
+    "pin_features": "Radial and circumferential grooves"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "417 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "Natural cooling with external heating control",
+    "cooling_medium": "Air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "6.1 ± 0.2 µm (3rd layer); 9.3 ± 0.3 µm (1st layer)",
+    "grain_morphology": "Subgrained",
+    "recrystallization_type": "Dynamic",
+    "precipitate_condition": "Mg2Si",
+    "second_phase_particles": "Mg2Si",
+    "phase_transformation_details": "Dynamic recrystallization with severe plastic deformation",
+    "defect_type": "Minimal porosity",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "86.3 ± 1.7 HV",
+    "yield_strength": "104.8 ± 4.1 MPa",
+    "ultimate_tensile_strength": "188.6 ± 5 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": "15.9 ± 0.19 %"
+  }
+}

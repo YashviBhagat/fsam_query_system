@@ -1,0 +1,83 @@
+{
+    "metadata": {
+      "paper_name": "Microstructural evolution and mechanical properties of AA6061 aluminum alloy at various stages of additive friction stir deposition",
+      "sample_id": "Single-pass AFSD deposit (R1–R5 regions)"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA6061",
+      "starting_temper": "T6",
+      "temper_condition": "rolled",
+      "elemental_composition_wt_pct": {
+        "Mg": "1.061",
+        "Si": "0.610",
+        "Cu": "0.229",
+        "Fe": "0.595",
+        "Ti": "0.025",
+        "Cr": "0.115",
+        "Zn": "0.129",
+        "Mn": "0.137",
+        "Al": "97.099"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "rolled plate / square bar",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "200 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Single-pass additive friction stir deposition using hollow cylindrical tool under constant displacement control with in-situ temperature and torque monitoring",
+      "rotation_speed": "500-700 r/min",
+      "traverse_velocity": "100-140 mm/min",
+      "feed_rate_or_pitch": "18 mm/min",
+      "layer_thickness": "2 mm",
+      "build_direction": "LD/TD",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "45 mm",
+      "shoulder_feature": "flat",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "hollow cylindrical",
+      "pin_features": "square internal hole 20×20 mm"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": "470 °C",
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "room temperature",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "7.2-12.8 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "DissolvedReprecipitated",
+      "second_phase_particles": "Mg2Si; Al(MnCrFe)Si",
+      "phase_transformation_details": "β'' → β(Mg2Si)",
+      "defect_type": "Void",
+      "grain_refinement_factor": "93 %"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "53.1-79.9 HV0.2",
+      "yield_strength": "185.1-187.3 MPa",
+      "ultimate_tensile_strength": "266.4-273.5 MPa",
+      "ductility_percentage": "22.8-23.7 %",
+      "Elongation_percentage": "22.8-23.7 %"
+    }
+  }
+  

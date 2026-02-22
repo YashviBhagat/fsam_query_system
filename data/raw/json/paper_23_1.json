@@ -1,0 +1,82 @@
+{
+    "metadata": {
+      "paper_name": "Solid-state additive manufacturing of dissimilar 7075–2024 aluminum alloys by additive friction stir deposition: Interfacial bonding and process optimization",
+      "sample_id": "AA2024-T4"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA2024",
+      "starting_temper": "T4",
+      "temper_condition": "T4",
+      "elemental_composition_wt_pct": {
+        "Zn": "0.08 wt%",
+        "Mg": "1.18 wt%",
+        "Cu": "3.13 wt%",
+        "Fe": "0.21 wt%",
+        "Mn": "0.40 wt%",
+        "Si": "0.07 wt%",
+        "Cr": "0.01 wt%",
+        "Al": "94.92 wt%"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "Bar",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Additive friction stir deposition of dissimilar aluminum alloys",
+      "rotation_speed": "800–1400 rpm",
+      "traverse_velocity": "60 mm/min",
+      "feed_rate_or_pitch": "15 mm/min",
+      "layer_thickness": "2 mm",
+      "build_direction": "BD",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": null,
+      "shoulder_feature": null,
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": null,
+      "pin_features": null
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "Room temperature",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "1.40 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Partially-dissolved",
+      "second_phase_particles": "Al2CuMg",
+      "phase_transformation_details": "Partial dissolution of S-phase precipitates during AFSD",
+      "defect_type": "None",
+      "grain_refinement_factor": null
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "80–100 HV",
+      "yield_strength": null,
+      "ultimate_tensile_strength": "299.6 MPa",
+      "ductility_percentage": "18.4 %",
+      "Elongation_percentage": "18.4 %"
+    }
+  }
+  

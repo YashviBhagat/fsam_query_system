@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "paper_name": "Influence of process parameters on microstructure and mechanical properties in 6156 aluminum alloy friction stir side additive manufacturing",
+    "sample_id": "FSSAM-6156-T6-multilayer"
+  },
+
+  "material_input": {
+    "base_alloy": "AA6156",
+    "starting_temper": "T6",
+    "temper_condition": "rolled",
+    "elemental_composition_wt_pct": {
+      "Si": "0.7 wt.%",
+      "Fe": "0.084 wt.%",
+      "Cu": "1.04 wt.%",
+      "Mn": "0.43 wt.%",
+      "Mg": "0.82 wt.%",
+      "Cr": "<0.05 wt.%",
+      "Zn": "0.15 wt.%",
+      "Al": "96.746 wt.%"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "sheet",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Friction stir side additive manufacturing using multilayer stacked aluminum strips on a plate substrate",
+    "rotation_speed": "600–1000 rpm",
+    "traverse_velocity": "23.5–47.5 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": null,
+    "build_direction": "side",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "W18Cr4V steel",
+    "shoulder_diameter": null,
+    "shoulder_feature": "shoulderless",
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": "cylindrical",
+    "pin_features": "smooth"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "238–252 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "natural",
+    "cooling_medium": "air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": null,
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "Dynamic",
+    "precipitate_condition": null,
+    "second_phase_particles": null,
+    "phase_transformation_details": null,
+    "defect_type": "Unbonded",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "61–72 HV0.2",
+    "yield_strength": null,
+    "ultimate_tensile_strength": "196.27–275.61 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": "7.25–12.7 %"
+  }
+}

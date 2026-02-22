@@ -1,0 +1,73 @@
+{
+    "metadata": {
+      "paper_name": "Mechanical Characterization of Aluminium Alloy 6061 Powder Deposit Made by Friction Stir Based Additive Manufacturing",
+      "sample_id": "AFSP-Al6061-powder-deposit"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA6061",
+      "starting_temper": "T6",
+      "temper_condition": "solutionized",
+      "elemental_composition_wt_pct": {},
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "powder",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSP",
+      "process_description": "Powder-based additive friction stir processing with side-fed powder delivery to avoid in-tool consolidation",
+      "rotation_speed": "1700 rpm",
+      "traverse_velocity": "22 mm/min",
+      "feed_rate_or_pitch": null,
+      "layer_thickness": "0.2 mm",
+      "build_direction": "Z",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": "H13 steel",
+      "shoulder_diameter": "16 mm",
+      "shoulder_feature": "concave",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "cylindrical",
+      "pin_features": "chamfered corner"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "room temperature",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": null,
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": null,
+      "second_phase_particles": null,
+      "phase_transformation_details": null,
+      "defect_type": null,
+      "grain_refinement_factor": null
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "60.25-70.25 HV",
+      "yield_strength": "102-108 MPa",
+      "ultimate_tensile_strength": "132.77-133.35 MPa",
+      "ductility_percentage": null,
+      "Elongation_percentage": null
+    }
+  }
+  

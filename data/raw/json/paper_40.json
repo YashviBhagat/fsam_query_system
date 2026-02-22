@@ -1,0 +1,83 @@
+{
+    "metadata": {
+      "paper_name": "Microstructure and localized corrosion properties of 2219 aluminum alloy manufactured by additive friction stir deposition",
+      "sample_id": "AFSD-2219"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA2219",
+      "starting_temper": "T6",
+      "temper_condition": "heat-treated",
+      "elemental_composition_wt_pct": {
+        "Si": "0.05 wt%",
+        "Fe": "0.08 wt%",
+        "Cu": "6.30 wt%",
+        "Mn": "0.33 wt%",
+        "Zn": "0.04 wt%",
+        "Ti": "0.07 wt%",
+        "V": "0.12 wt%",
+        "Zr": "0.18 wt%",
+        "Al": "92.83 wt%"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "rod",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "58.04 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Multi-layer additive friction stir deposition using hollow rotating tool",
+      "rotation_speed": "600 rpm",
+      "traverse_velocity": "70 mm/min",
+      "feed_rate_or_pitch": "20.91 mm/min",
+      "layer_thickness": "2 mm",
+      "build_direction": "longitudinal",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "32 mm",
+      "shoulder_feature": null,
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "hollow",
+      "pin_features": null
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": "700 °C",
+      "axial_force": "100 kN",
+      "torque": "300 Nm",
+      "ambient_temperature": null,
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "4.12 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Fragmented",
+      "second_phase_particles": "Al2Cu",
+      "phase_transformation_details": "θ’ to θ (Al2Cu)",
+      "defect_type": "Intergranular",
+      "grain_refinement_factor": "14.1"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": null,
+      "yield_strength": null,
+      "ultimate_tensile_strength": null,
+      "ductility_percentage": null,
+      "Elongation_percentage": null
+    }
+  }
+  

@@ -1,0 +1,83 @@
+{
+    "metadata": {
+      "paper_name": "Effect of Rotational Shear and Heat Input on the Microstructure and Mechanical Properties of Large-Diameter 6061 Aluminium Alloy Additive Friction Stir Deposition",
+      "sample_id": "NO.1-3"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA6061",
+      "starting_temper": "T6",
+      "temper_condition": "extruded",
+      "elemental_composition_wt_pct": {
+        "Mg": "0.8-1.2",
+        "Si": "0.4-0.8",
+        "Fe": "0.7",
+        "Cu": "0.15-0.4",
+        "Mn": "0.15",
+        "Ti": "0.15",
+        "Cr": "0.35",
+        "Zn": "0.25",
+        "Al": "96.85-97.05"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "bar",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "34.4 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Large-diameter bar additive friction stir deposition with single-layer and 15-layer builds",
+      "rotation_speed": "600-1000 rpm",
+      "traverse_velocity": "90 mm/min",
+      "feed_rate_or_pitch": "90 mm/min",
+      "layer_thickness": "2.5 mm",
+      "build_direction": "LD/BD",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": "40 Cr",
+      "shoulder_diameter": "58 mm",
+      "shoulder_feature": "flat",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "solid",
+      "pin_features": null
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": "435.2-525.4 °C",
+      "axial_force": "10 kN",
+      "torque": null,
+      "ambient_temperature": "20 °C",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "2.32-3.04 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "ContinuousDynamic",
+      "precipitate_condition": "Coarsened",
+      "second_phase_particles": "Mg2Si",
+      "phase_transformation_details": "CDRX",
+      "defect_type": "Voids",
+      "grain_refinement_factor": "91.2-93.3 %"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "45-80 %",
+      "yield_strength": null,
+      "ultimate_tensile_strength": "200-211 MPa",
+      "ductility_percentage": "20-37 %",
+      "Elongation_percentage": "20-37 %"
+    }
+  }
+  

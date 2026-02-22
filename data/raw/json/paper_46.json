@@ -1,0 +1,84 @@
+{
+    "metadata": {
+      "paper_name": "Microstructure and anisotropy of mechanical properties in 7055 aluminum alloy fabricated by additive friction stir deposition: effects of heat treatment",
+      "sample_id": "AFSD-7055-as-deposited"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA7055",
+      "starting_temper": "O",
+      "temper_condition": "extruded",
+      "elemental_composition_wt_pct": {
+        "Cu": "2.12",
+        "Zn": "7.67",
+        "Mg": "1.82",
+        "Zr": "0.09",
+        "Ti": "0.04",
+        "Cr": "0.05",
+        "Mn": "0.05",
+        "Fe": "0.03",
+        "Si": "0.01",
+        "Al": "88.12"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "extruded rod",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Layer-by-layer additive friction stir deposition using solid-state thermo-mechanical coupling",
+      "rotation_speed": "500 rpm",
+      "traverse_velocity": "300 mm/min",
+      "feed_rate_or_pitch": null,
+      "layer_thickness": "1.2 mm",
+      "build_direction": "ST",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": null,
+      "shoulder_feature": null,
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": null,
+      "pin_features": null
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "27 °C",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "2.32-3.57 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Coarse",
+      "second_phase_particles": "Zn/Cu-rich",
+      "phase_transformation_details": null,
+      "defect_type": "Voids",
+      "grain_refinement_factor": null
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "102.0 HV0.2",
+      "yield_strength": "204.2-211.8 MPa",
+      "ultimate_tensile_strength": "279.4-305.5 MPa",
+      "ductility_percentage": "3.5-6.2 %",
+      "Elongation_percentage": "3.5-6.2 %"
+    }
+  }
+  

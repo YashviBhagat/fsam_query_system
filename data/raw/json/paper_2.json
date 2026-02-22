@@ -1,0 +1,82 @@
+{
+    "metadata": {
+      "paper_name": "Investigation of the effect of process parameters on the mechanical properties of friction stir additive manufactured (FSAM) AA8090 alloy",
+      "sample_id": "FSAM-AA8090-multilayer"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA8090",
+      "starting_temper": null,
+      "temper_condition": "rolled",
+      "elemental_composition_wt_pct": {
+        "Li": "2.2 wt.%",
+        "Cu": "1.2 wt.%",
+        "Mg": "0.81 wt.%",
+        "Si": "0.101 wt.%",
+        "Zr": "0.106 wt.%",
+        "Fe": "0.056 wt.%",
+        "Al": "95.727 wt.%"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "plate",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": "2.54 g/cm3",
+      "initial_grain_size": "28.01 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "FSAM",
+      "process_description": "Layer-by-layer friction stir additive manufacturing of AA8090 plates using a non-consumable rotating tool",
+      "rotation_speed": "1000–2000 rpm",
+      "traverse_velocity": "45–55 mm/min",
+      "feed_rate_or_pitch": null,
+      "layer_thickness": "2 mm",
+      "build_direction": "Incremental layer-by-layer",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": "6°"
+
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": "H13 tool steel",
+      "shoulder_diameter": "18 mm",
+      "shoulder_feature": "flat",
+      "pin_diameter_root": "6 mm",
+      "pin_diameter_tip": null,
+      "pin_length": "3.2 mm",
+      "pin_geometry": "cylindrical",
+      "pin_features": "smooth"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": null,
+      "cooling_method": "natural",
+      "cooling_medium": "air",
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "17.01 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Refined",
+      "second_phase_particles": "δ′",
+      "phase_transformation_details": null,
+      "defect_type": "None",
+      "grain_refinement_factor": "62 %"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "113 HV",
+      "yield_strength": null,
+      "ultimate_tensile_strength": "346.79 MPa",
+      "ductility_percentage": null,
+      "Elongation_percentage": null
+    }
+  }
+  

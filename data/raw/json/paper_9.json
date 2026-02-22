@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "paper_name": "Friction stir powder additive manufacturing of Al 6061 alloy: Enhancing microstructure and mechanical properties by reducing thermal gradient",
+    "sample_id": "10-layer Al 6061 multi-layer deposition (with external heat source close-loop control)"
+   
+  },
+  "material_input": {
+    "base_alloy": "Al 6061 alloy",
+    "starting_temper": null,
+    "temper_condition": null,
+    "elemental_composition_wt_pct": {
+      "Al": "98.4%",
+      "Mg": "1.1%",
+      "Si": "0.5%"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "powder",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": "27 µm"
+  },
+  "process_parameters": {
+    "process_category": "FSPAM",
+    "process_description": "Multi-layer deposition on AA6061-T4 substrate with external heat source in close-loop control to reduce thermal gradient; 10 layers; deposition length 130 mm",
+    "rotation_speed": "1200 rpm",
+    "traverse_velocity": "25 mm/min",
+    "feed_rate_or_pitch": "460 mm3/min",
+    "layer_thickness": "0.5 ± 0.05 mm",
+    "build_direction": "Z",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": "6°"
+  },
+  "tool_geometry_parameters": {
+    "tool_material": "H13 tool steel",
+    "shoulder_diameter": "22 mm",
+    "shoulder_feature": "radial and circumferential grooves",
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+  "physics_and_environment": {
+    "peak_temperature_recorded": "305–358 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "in-situ substrate temperature control using external heat source",
+    "cooling_medium": null,
+    "inert_gas_used": "argon (0.2 l/min)"
+  },
+  "microstructure_outputs": {
+    "final_grain_size": "1.09–1.18 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "CDRX",
+    "precipitate_condition": "Mg2Si",
+    "second_phase_particles": "Mg2Si",
+    "phase_transformation_details": null,
+    "defect_type": "defect-free",
+    "grain_refinement_factor": "98.1%"
+  },
+  "mechanical_outputs": {
+    "measured_hardness": "87.7 ± 2.4 HV",
+    "yield_strength": "106.2 ± 5 MPa",
+    "ultimate_tensile_strength": "190.7 ± 11.9 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": "16.7 ± 0.5%"
+  }
+}

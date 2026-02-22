@@ -1,0 +1,74 @@
+{
+    "metadata": {
+      "paper_name": "Microstructural and Mechanical Characterization of Additive Friction Stir-Deposition of Aluminum Alloy 5083 Effect of Lubrication on Material Anisotropy",
+      "sample_id": "AFS-D_AA5083_P1_FreeStanding"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA5083",
+      "starting_temper": "H131",
+      "temper_condition": "rolled",
+      "elemental_composition_wt_pct": {
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "plate; rods",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "250 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "AFS-D",
+      "process_description": "B8 MELD machine; parameter study with constant traverse velocity and varied rotational speed and volumetric feed rate; follow-on free-standing deposit used optimal parameter set P1",
+      "rotation_speed": "200-400 RPM",
+      "traverse_velocity": "127 mm/min",
+      "feed_rate_or_pitch": "6341-8664 mm3/min",
+      "layer_thickness": "1 mm",
+      "build_direction": "LD; BD",
+      "interlayer_dwell_time": "occasionally between layers",
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": "hardened steel",
+      "shoulder_diameter": null,
+      "shoulder_feature": "4 teardrop",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": null,
+      "pin_features": null
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": null,
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "3.16 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "CDRX",
+      "precipitate_condition": null,
+      "second_phase_particles": "Al6Fe; Al6Mn; Al3Mg2",
+      "phase_transformation_details": null,
+      "defect_type": "Delamination; Contamination",
+      "grain_refinement_factor": "97 %"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "102 Hv; 82.9 ± 4.7 Hv; 81.1 Hv",
+      "yield_strength": "151.3 ± 1.7 MPa; 157.7 ± 1.2 MPa",
+      "ultimate_tensile_strength": "431.3 ± 1.9 MPa; 246.2 ± 45.9 MPa",
+      "ductility_percentage": null,
+      "Elongation_percentage": "0.30 ± 0.005; 0.08 ± 0.045"
+    }
+  }
+  

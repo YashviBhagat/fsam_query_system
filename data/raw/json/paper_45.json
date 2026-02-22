@@ -1,0 +1,73 @@
+{
+    "metadata": {
+      "paper_name": "Ballistic Evaluation of Aluminum Alloy (AA) 7075 Plate Repaired by Additive Friction Stir Deposition Using AA7075 Feedstock",
+      "sample_id": "AFSD-AA7075-T6511-ballistic-repair"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA7075",
+      "starting_temper": "T6511",
+      "temper_condition": "wrought",
+      "elemental_composition_wt_pct": {},
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "plate",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "100 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Ballistic repair of penetrated AA7075 plates by depositing same-alloy feedstock using additive friction stir deposition",
+      "rotation_speed": null,
+      "traverse_velocity": null,
+      "feed_rate_or_pitch": null,
+      "layer_thickness": "1 mm",
+      "build_direction": null,
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": null,
+      "shoulder_feature": "flat",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "hollow",
+      "pin_features": "teardrop features"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "room temperature",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "6.4 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Coarsened",
+      "second_phase_particles": null,
+      "phase_transformation_details": "CDRX",
+      "defect_type": "None",
+      "grain_refinement_factor": "93 %"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "160 HV",
+      "yield_strength": null,
+      "ultimate_tensile_strength": null,
+      "ductility_percentage": null,
+      "Elongation_percentage": null
+    }
+  }
+  

@@ -1,0 +1,79 @@
+{
+    "metadata": {
+      "paper_name": "The Effects of Layer Thickness on the Mechanical Properties of Additive Friction Stir Deposition-Fabricated Aluminum Alloy 6061 Parts",
+      "sample_id": "AA6061-AFSD-layer-thickness"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA6061",
+      "starting_temper": "T6",
+      "temper_condition": "wrought",
+      "elemental_composition_wt_pct": {
+        "Mg": "1.63",
+        "Si": "0.44",
+        "Cu": "0.23",
+        "Fe": "0.16",
+        "Al": "97.54"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "square rod",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": "2713 kg/m3",
+      "initial_grain_size": null
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Additive friction stir deposition using MELD L3 system with layer-by-layer deposition",
+      "rotation_speed": "300 rpm",
+      "traverse_velocity": "96.5-279.4 mm/min",
+      "feed_rate_or_pitch": "152.4 mm/min",
+      "layer_thickness": "1-3 mm",
+      "build_direction": "Z",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "38.1 mm",
+      "shoulder_feature": "teardrop protrusions",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "flat",
+      "pin_features": "two pairs of teardrop-shaped protrusions"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": "open-air",
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": null,
+      "grain_morphology": null,
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": null,
+      "second_phase_particles": null,
+      "phase_transformation_details": null,
+      "defect_type": null,
+      "grain_refinement_factor": null
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": null,
+      "yield_strength": null,
+      "ultimate_tensile_strength": null,
+      "ductility_percentage": null,
+      "Elongation_percentage": null
+    }
+  }
+  

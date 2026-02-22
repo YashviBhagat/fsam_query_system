@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "paper_name": "Microstructure evolution and mechanical properties of high-strength aluminum alloy prepared by additive friction stir deposition",
+    "sample_id": "AA7075_AFSD_S1_S2"
+  },
+
+  "material_input": {
+    "base_alloy": "AA7075",
+    "starting_temper": "T6",
+    "temper_condition": "extruded",
+    "elemental_composition_wt_pct": {
+      "Zn": "5.69 wt%",
+      "Mg": "2.41 wt%",
+      "Cu": "1.65 wt%",
+      "Fe": "0.36 wt%",
+      "Cr": "0.21 wt%",
+      "Mn": "0.19 wt%",
+      "Si": "0.17 wt%",
+      "Al": "89.32 wt%"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "square bar",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": "46.4 μm"
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "Additive friction stir deposition using hollow shoulder and consumable bar under room and low temperature environments",
+    "rotation_speed": "300 rpm",
+    "traverse_velocity": "150 mm/min",
+    "feed_rate_or_pitch": "100 mm/min",
+    "layer_thickness": "2 mm",
+    "build_direction": "vertical",
+    "interlayer_dwell_time": "dozen seconds",
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": "hollow",
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "410 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": "room temperature / liquid nitrogen",
+    "cooling_method": "cryogenic cooling",
+    "cooling_medium": "liquid nitrogen",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "3.9–5.0 μm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "Dynamic",
+    "precipitate_condition": "Coarsened",
+    "second_phase_particles": "E-Al18Mg3Cr2, η-MgZn2, T-Al32(Mg,Zn)49",
+    "phase_transformation_details": "Dissolution of primary precipitates followed by re-precipitation during thermal cycling",
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "100–145 HV",
+    "yield_strength": "224–337 MPa",
+    "ultimate_tensile_strength": "391–518 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": "16.9–22 %"
+  }
+}

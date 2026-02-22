@@ -1,0 +1,79 @@
+{
+  "metadata": {
+    "paper_name": "Additive friction stir deposition-enabled upcycling of automotive cast aluminum chips",
+    "sample_id": "Automotive cast Al chips AFSD upcycling (as-printed)"
+  },
+
+  "material_input": {
+    "base_alloy": "Automotive cast Al-Si (hypereutectic) machining chips (mixed Teksid Al alloys)",
+    "starting_temper": null,
+    "temper_condition": null,
+    "elemental_composition_wt_pct": {
+      "Si": "14.06 wt%",
+      "Fe": "0.42 wt%",
+      "Mn": "0.26 wt%",
+      "Mg": "0.27 wt%",
+      "Cu": "0.30 wt%",
+      "Al": "84.69 wt%"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "machining chips (cold-pressed into feed-rod)",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": "∼25 µm"
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "AFSD consolidation/upcycling of cold-pressed porous feed-rods made from automotive cast Al machining chips; printed wall structure in as-printed state without post-deposition heat treatment",
+    "rotation_speed": "400 RPM",
+    "traverse_velocity": "1.27 mm/s",
+    "feed_rate_or_pitch": "1.27 mm/s",
+    "layer_thickness": "∼1 mm",
+    "build_direction": null,
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": null,
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "approximately 60%–90% of the melting temperature for Al matrix",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": "room temperature",
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "∼2 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "CDRX",
+    "precipitate_condition": null,
+    "second_phase_particles": "Si; Fe-based intermetallics",
+    "phase_transformation_details": "Primary Si and Fe-containing intermetallic particles refined, spheroidized, and uniformly distributed after deposition; cast microstructure converted to fine equiaxed grains via dynamic recrystallization",
+    "defect_type": "porosity-free",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": null,
+    "yield_strength": "90 MPa",
+    "ultimate_tensile_strength": "193 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": "17.8 %"
+  }
+}

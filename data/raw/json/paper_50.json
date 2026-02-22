@@ -1,0 +1,67 @@
+{
+    "metadata": {
+      "paper_name": "Microstructural Response in Friction Stir Additive Manufacturing of 5A06 Aluminum Alloy",
+      "sample_id": "FSAM-5A06 (25 layers); FSAM-5A06 + CNT (1.5 wt.%)"
+    },
+    "material_input": {
+      "base_alloy": "AA5A06",
+      "starting_temper": null,
+      "temper_condition": "forged",
+      "elemental_composition_wt_pct": {},
+      "reinforcement_material": "carbon nanotubes",
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "rod",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": null
+    },
+    "process_parameters": {
+      "process_category": "FSAM",
+      "process_description": "Consumable-tool-based FSAM using AA5A06 rod as stirring tool; substrate forged AA5A06 plate; 25 layers; CNT condition uses AA5A06 stirring tool containing 1.5 wt.% carbon nanotubes (prefabricated by solid-state powder metallurgy)",
+      "rotation_speed": "300 rpm",
+      "traverse_velocity": "100 mm/min",
+      "feed_rate_or_pitch": null,
+      "layer_thickness": null,
+      "build_direction": null,
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+    "tool_geometry_parameters": {
+      "tool_material": "AA5A06",
+      "shoulder_diameter": null,
+      "shoulder_feature": null,
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": null,
+      "pin_features": null
+    },
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": "2 MPa",
+      "torque": null,
+      "ambient_temperature": null,
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+    "microstructure_outputs": {
+      "final_grain_size": "5.8-6.2 µm; 1.9-2.0 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Recrystallized",
+      "precipitate_condition": null,
+      "second_phase_particles": null,
+      "phase_transformation_details": null,
+      "defect_type": "Edge",
+      "grain_refinement_factor": null
+    },
+    "mechanical_outputs": {
+      "measured_hardness": null,
+      "yield_strength": null,
+      "ultimate_tensile_strength": "225-260 MPa; 225-270 MPa",
+      "ductility_percentage": "26-32 %; 12-16 %",
+      "Elongation_percentage": "26-32 %; 12-16 %"
+    }
+  }
+  

@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "paper_name": "Solid-state additive manufacturing of aluminum and copper using additive friction stir deposition: Process-microstructure linkages",
+    "sample_id": "AA6061-T6_AFSD_Generic"
+  },
+
+  "material_input": {
+    "base_alloy": "Al-Mg-Si (AA 6061)",
+    "starting_temper": "T6",
+    "temper_condition": "Heat-treated",
+    "elemental_composition_wt_pct": {},
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "Feed rod (9.525 × 9.525 mm square cross-section)",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": "113 µm"
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "Additive friction stir deposition using a rotating tool head and feed rod to deposit AA6061 onto an aluminum substrate",
+    "rotation_speed": "200–600 rpm",
+    "traverse_velocity": "1–3 mm/s",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": "0.765 mm",
+    "build_direction": "Vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": "Flat bottom with protrusions",
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": "Hollow tool head",
+    "pin_features": "Two protrusions, 1.5 mm height"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "706–824 K",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "Natural cooling",
+    "cooling_medium": "Air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "10–16 µm",
+    "grain_morphology": "Elongated",
+    "recrystallization_type": "Continuous",
+    "precipitate_condition": "Dissolved",
+    "second_phase_particles": "β''",
+    "phase_transformation_details": "Geometric dynamic recrystallization and progressive lattice rotation",
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "45.4–67.3 HV",
+    "yield_strength": null,
+    "ultimate_tensile_strength": null,
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

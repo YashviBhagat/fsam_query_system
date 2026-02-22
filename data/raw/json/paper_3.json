@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "paper_name": "Combining fusion-based and solid-state additive manufacturing: Investigation of additive DED structures with friction surfacing interlayer",
+    "sample_id": "AA2050 substrate + MLFS (AA5083 or AA7050) + WAAM AA5087"
+  },
+
+  "material_input": {
+    "base_alloy": "AA2050",
+    "starting_temper": "T84",
+    "temper_condition": "rolled",
+    "elemental_composition_wt_pct": {
+      "AA2050": {
+        "Cu": "3.2–3.9 wt.%",
+        "Li": "0.7–1.3 wt.%",
+        "Ag": "0.2–0.7 wt.%",
+        "Mg": "0.2–0.6 wt.%",
+        "Mn": "0.2–0.5 wt.%",
+        "Zr": "0.06–0.14 wt.%"
+      },
+      "AA5083": {
+        "Mg": "4–4.9 wt.%",
+        "Mn": "0.4–1 wt.%",
+        "Cr": "0.05–0.25 wt.%"
+      },
+      "AA7050": {
+        "Zn": "5.7–6.7 wt.%",
+        "Cu": "2–2.6 wt.%",
+        "Mg": "1.9–2.6 wt.%"
+      }
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Multi-layer friction surfacing (MLFS) used as a solid-state additive interlayer on AA2050 substrate prior to WAAM",
+    "rotation_speed": "500–1200 rpm",
+    "traverse_velocity": "4–8 mm/s",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": null,
+    "build_direction": null,
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": "2°"
+
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": null,
+    "pin_diameter_root": "20 mm",
+    "pin_diameter_tip": "20 mm",
+    "pin_length": "125 mm",
+    "pin_geometry": "cylindrical",
+    "pin_features": "smooth"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": "8–12 kN",
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "natural",
+    "cooling_medium": "air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": null,
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "Dynamic",
+    "precipitate_condition": null,
+    "second_phase_particles": null,
+    "phase_transformation_details": null,
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "80–120 HV0.2",
+    "yield_strength": "169.50–267.40 MPa",
+    "ultimate_tensile_strength": "247.52–291.54 MPa",
+    "ductility_percentage": null,
+    "Elongation_percentage": "18.07–30.20 %"
+  }
+}

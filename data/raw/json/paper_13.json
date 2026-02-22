@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "paper_name": "Experimental and numerical studies of re-stirring and re-heating effects on mechanical properties in friction stir additive manufacturing",
+    "sample_id": "AA6061-T6 FSAM multilayer"
+  },
+
+  "material_input": {
+    "base_alloy": "AA6061",
+    "starting_temper": "T6",
+    "temper_condition": null,
+    "elemental_composition_wt_pct": {},
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "plate",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "FSAM",
+    "process_description": "Multi-layer friction stir additive manufacturing with re-stirring and re-heating effects",
+    "rotation_speed": "1000 rev/min",
+    "traverse_velocity": "100 mm/min",
+    "feed_rate_or_pitch": null,
+    "layer_thickness": null,
+    "build_direction": "vertical",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "H13 steel",
+    "shoulder_diameter": "24 mm",
+    "shoulder_feature": "flat",
+    "pin_diameter_root": "6 mm",
+    "pin_diameter_tip": "8 mm",
+    "pin_length": null,
+    "pin_geometry": "conical",
+    "pin_features": "smooth"
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": "351.1–392.4 °C",
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": null,
+    "cooling_method": "air cooling",
+    "cooling_medium": "air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "9.65–15.9 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "DRX",
+    "precipitate_condition": "Refined",
+    "second_phase_particles": "Mg2Si",
+    "phase_transformation_details": "Dynamic recrystallization during stirring and re-stirring with precipitate evolution during reheating",
+    "defect_type": null,
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "61.0–80.06 HV",
+    "yield_strength": "172.79–194.12 MPa",
+    "ultimate_tensile_strength": null,
+    "ductility_percentage": null,
+    "Elongation_percentage": null
+  }
+}

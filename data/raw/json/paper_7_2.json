@@ -1,0 +1,78 @@
+{
+    "metadata": {
+      "paper_name": "Effect of heat treatment on microstructure, mechanical properties and corrosion resistance of 7075 aluminum alloys fabricated by improved friction stir additive manufacturing",
+      "sample_id": "T73"
+    },
+    "material_input": {
+      "base_alloy": "7075 aluminum alloy",
+      "starting_temper": "T6",
+      "temper_condition": "T73",
+      "elemental_composition_wt_pct": {
+        "Zn": "5.59",
+        "Mg": "2.62",
+        "Cu": "1.50",
+        "Mn": "0.10",
+        "Cr": "0.22",
+        "Ti": "0.05",
+        "Fe": "0.16",
+        "Si": "0.06",
+        "Al": "89.70"
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "plate",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "19.97 µm"
+    },
+    "process_parameters": {
+      "process_category": "Friction stir additive manufacturing (FSAM)",
+      "process_description": "FSAM followed by T73 heat treatment",
+      "rotation_speed": "800 r/min",
+      "traverse_velocity": "80 mm/min",
+      "feed_rate_or_pitch": null,
+      "layer_thickness": "3 mm",
+      "build_direction": "Z",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": "2.5°"
+
+    },
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "16 mm",
+      "shoulder_feature": null,
+      "pin_diameter_root": "10 mm",
+      "pin_diameter_tip": "6 mm",
+      "pin_length": "3 mm",
+      "pin_geometry": null,
+      "pin_features": null
+    },
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": null,
+      "torque": null,
+      "ambient_temperature": null,
+      "cooling_method": "quench",
+      "cooling_medium": "ice water",
+      "inert_gas_used": null
+    },
+    "microstructure_outputs": {
+      "final_grain_size": "3.72 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": null,
+      "precipitate_condition": "η",
+      "second_phase_particles": null,
+      "phase_transformation_details": "η′ to η",
+      "defect_type": null,
+      "grain_refinement_factor": null
+    },
+    "mechanical_outputs": {
+      "measured_hardness": null,
+      "yield_strength": "326.5 MPa",
+      "ultimate_tensile_strength": "471 MPa",
+      "ductility_percentage": "26.66 %",
+      "Elongation_percentage": "26.66 %"
+    }
+  }
+  

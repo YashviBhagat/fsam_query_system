@@ -1,0 +1,77 @@
+{
+    "metadata": {
+      "paper_name": "A Novel Approach for Enhanced Mechanical Properties in Solid-State Additive Manufacturing by Additive Friction Stir Deposition Using Thermally Stable Al-Ce-Mg Alloy",
+      "sample_id": "AFSD-Al-8Ce-10Mg"
+    },
+  
+    "material_input": {
+      "base_alloy": "Al-8Ce-10Mg",
+      "starting_temper": null,
+      "temper_condition": "extruded",
+      "elemental_composition_wt_pct": {
+        "Al": 82,
+        "Ce": 8,
+        "Mg": 10
+      },
+      "reinforcement_material": "Al11Ce3",
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "extruded bar",
+      "melting_point": "590 °C",
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "8 ± 3.7 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "AFSD",
+      "process_description": "Additive friction stir deposition using hollow rotating tool",
+      "rotation_speed": "250 rpm",
+      "traverse_velocity": "254 mm/min",
+      "feed_rate_or_pitch": "152.4 mm/min",
+      "layer_thickness": "1 mm",
+      "build_direction": "vertical",
+      "interlayer_dwell_time": null,
+      "tool_tilt_angle": null
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": "H13 steel",
+      "shoulder_diameter": "38.1 mm",
+      "shoulder_feature": "protrusions",
+      "pin_diameter_root": null,
+      "pin_diameter_tip": null,
+      "pin_length": null,
+      "pin_geometry": "hollow",
+      "pin_features": "four teardrop-shaped protrusions, 2 mm height"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": "421 °C",
+      "axial_force": "6247.5 N",
+      "torque": "173.4 Nm",
+      "ambient_temperature": null,
+      "cooling_method": null,
+      "cooling_medium": null,
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "4.5 ± 1.5 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Fragmented",
+      "second_phase_particles": "Al11Ce3",
+      "phase_transformation_details": "Mg dissolution into Al matrix",
+      "defect_type": "None",
+      "grain_refinement_factor": "≈50 %"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "128 HV",
+      "yield_strength": "235.6 MPa",
+      "ultimate_tensile_strength": "404.6 MPa",
+      "ductility_percentage": "22.5 %",
+      "Elongation_percentage": "22.5 %"
+    }
+  }
+  

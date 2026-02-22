@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "paper_name": "Solid-state additive manufacturing of dissimilar 7075–2024 aluminum alloys by additive friction stir deposition: Interfacial bonding and process optimization",
+    "sample_id": "AA7075-T6"
+  },
+
+  "material_input": {
+    "base_alloy": "AA7075",
+    "starting_temper": "T6",
+    "temper_condition": "T6",
+    "elemental_composition_wt_pct": {
+      "Zn": "5.60 wt%",
+      "Mg": "2.49 wt%",
+      "Cu": "1.11 wt%",
+      "Fe": "0.37 wt%",
+      "Mn": "0.14 wt%",
+      "Si": "0.17 wt%",
+      "Cr": "0.24 wt%",
+      "Al": "89.88 wt%"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "Bar",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "AFSD",
+    "process_description": "Additive friction stir deposition of dissimilar aluminum alloys",
+    "rotation_speed": "800–1400 rpm",
+    "traverse_velocity": "60 mm/min",
+    "feed_rate_or_pitch": "15 mm/min",
+    "layer_thickness": "2 mm",
+    "build_direction": "BD",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": null,
+    "shoulder_diameter": null,
+    "shoulder_feature": null,
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": "Room temperature",
+    "cooling_method": null,
+    "cooling_medium": null,
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "1.14 µm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "Dynamic",
+    "precipitate_condition": "Partially-dissolved",
+    "second_phase_particles": "MgZn2",
+    "phase_transformation_details": "Partial dissolution of η′/η precipitates during AFSD",
+    "defect_type": "None",
+    "grain_refinement_factor": null
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "100–120 HV",
+    "yield_strength": null,
+    "ultimate_tensile_strength": "362.3 MPa",
+    "ductility_percentage": "15.3 %",
+    "Elongation_percentage": "15.3 %"
+  }
+}

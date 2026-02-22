@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "paper_name": "Microstructure and Properties of 6061 Aluminum Alloy by Additive Friction Stir Deposition",
+    "sample_id": "AFSD-6061-XOY-YOZ"
+  },
+
+  "material_input": {
+    "base_alloy": "AA6061",
+    "starting_temper": "T6",
+    "temper_condition": "ASTM",
+    "elemental_composition_wt_pct": {
+      "Mg": "0.90 %",
+      "Si": "0.54 %",
+      "Fe": "0.12 %",
+      "Mn": "0.10 %",
+      "Cu": "0.28 %",
+      "Cr": "0.18 %",
+      "Ti": "0.04 %",
+      "Al": "97.84 %"
+    },
+    "reinforcement_material": null,
+    "reinforcement_vol_pct": null,
+    "starting_material_form": "Extruded cylindrical bar",
+    "melting_point": null,
+    "thermal_conductivity": null,
+    "density": null,
+    "initial_grain_size": null
+  },
+
+  "process_parameters": {
+    "process_category": "Additive Friction Stir Deposition",
+    "process_description": "Solid-state layer-by-layer deposition using frictional stirring without melting",
+    "rotation_speed": "375 r/min",
+    "traverse_velocity": "300 mm/min",
+    "feed_rate_or_pitch": "3000 mm/min",
+    "layer_thickness": null,
+    "build_direction": "XOY and YOZ",
+    "interlayer_dwell_time": null,
+    "tool_tilt_angle": null
+  },
+
+  "tool_geometry_parameters": {
+    "tool_material": "H13 tool steel",
+    "shoulder_diameter": null,
+    "shoulder_feature": null,
+    "pin_diameter_root": null,
+    "pin_diameter_tip": null,
+    "pin_length": null,
+    "pin_geometry": null,
+    "pin_features": null
+  },
+
+  "physics_and_environment": {
+    "peak_temperature_recorded": null,
+    "axial_force": null,
+    "torque": null,
+    "ambient_temperature": "Room temperature",
+    "cooling_method": "Air cooling",
+    "cooling_medium": "Air",
+    "inert_gas_used": null
+  },
+
+  "microstructure_outputs": {
+    "final_grain_size": "25–30 nm",
+    "grain_morphology": "Equiaxed",
+    "recrystallization_type": "Dynamic",
+    "precipitate_condition": "Dissolved",
+    "second_phase_particles": "Al5FeSi",
+    "phase_transformation_details": "Mg2Si precipitates dissolved during AFSD",
+    "defect_type": "None",
+    "grain_refinement_factor": "60 nm to 25–30 nm"
+  },
+
+  "mechanical_outputs": {
+    "measured_hardness": "30.60–105.0 HV",
+    "yield_strength": "60 MPa (X), 64 MPa (Z)",
+    "ultimate_tensile_strength": "≈145 MPa (X), ≈136 MPa (Z)",
+    "ductility_percentage": null,
+    "Elongation_percentage": "32.44 % (X), 26.73 % (Z)"
+  }
+}
+

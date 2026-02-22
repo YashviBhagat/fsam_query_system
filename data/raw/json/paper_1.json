@@ -1,0 +1,121 @@
+{
+    "metadata": {
+      "paper_name": "Experimental investigation of an aluminium-based functionally graded material fabricated by friction stir additive manufacturing",
+      "sample_id": "Five-layer AFGM (AA7075/AA2024/AA6061/AA5083/AA1100)"
+    },
+  
+    "material_input": {
+      "base_alloy": "AA7075/AA2024/AA6061/AA5083/AA1100",
+      "starting_temper": null,
+      "temper_condition": "wrought",
+      "elemental_composition_wt_pct": {
+        "Layer_1_AA7075": {
+          "Cu": "1 wt.%",
+          "Mg": "1.8 wt.%",
+          "Cr": "0.1 wt.%",
+          "Zn": "4.8 wt.%",
+          "Al": "92.3 wt.%"
+        },
+        "Layer_2_AA2024": {
+          "Si": "0.49 wt.%",
+          "Fe": "3.9 wt.%",
+          "Cu": "0.4 wt.%",
+          "Mn": "1.4 wt.%",
+          "Mg": "0.8 wt.%",
+          "Cr": "0.2 wt.%",
+          "Zn": "0.2 wt.%",
+          "Ti": "0.1 wt.%",
+          "Al": "92.41 wt.%"
+        },
+        "Layer_3_AA6061": {
+          "Si": "0.6 wt.%",
+          "Fe": "0.6 wt.%",
+          "Cu": "0.2 wt.%",
+          "Mn": "0.15 wt.%",
+          "Mg": "0.9 wt.%",
+          "Cr": "0.1 wt.%",
+          "Zn": "0.2 wt.%",
+          "Ti": "0.1 wt.%",
+          "Al": "97.15 wt.%"
+        },
+        "Layer_4_AA5083": {
+          "Si": "0.35 wt.%",
+          "Fe": "0.3 wt.%",
+          "Cu": "0.7 wt.%",
+          "Mn": "0.4 wt.%",
+          "Mg": "4 wt.%",
+          "Cr": "0.05 wt.%",
+          "Zn": "0.2 wt.%",
+          "Ti": "0.1 wt.%",
+          "Al": "93.9 wt.%"
+        },
+        "Layer_5_AA1100": {
+          "Si": "0.4 wt.%",
+          "Fe": "0.3 wt.%",
+          "Cu": "0.09 wt.%",
+          "Al": "99.21 wt.%"
+        }
+      },
+      "reinforcement_material": null,
+      "reinforcement_vol_pct": null,
+      "starting_material_form": "plate",
+      "melting_point": null,
+      "thermal_conductivity": null,
+      "density": null,
+      "initial_grain_size": "12–19 µm"
+    },
+  
+    "process_parameters": {
+      "process_category": "FSAM",
+      "process_description": "Five-layer aluminum-based functionally graded material fabricated by friction stir additive manufacturing",
+      "rotation_speed": "400–800 rpm",
+      "traverse_velocity": "20 mm/min",
+      "feed_rate_or_pitch": "3 mm/min",
+      "layer_thickness": "3 mm",
+      "build_direction": "vertical",
+      "interlayer_dwell_time": "8–10 s",
+      "tool_tilt_angle": "2.5°"
+
+    },
+  
+    "tool_geometry_parameters": {
+      "tool_material": null,
+      "shoulder_diameter": "30 mm",
+      "shoulder_feature": "flat",
+      "pin_diameter_root": "10 mm",
+      "pin_diameter_tip": "8 mm",
+      "pin_length": "14 mm",
+      "pin_geometry": "tapered",
+      "pin_features": "threaded"
+    },
+  
+    "physics_and_environment": {
+      "peak_temperature_recorded": null,
+      "axial_force": "6–8 kN",
+      "torque": null,
+      "ambient_temperature": null,
+      "cooling_method": "natural",
+      "cooling_medium": "air",
+      "inert_gas_used": null
+    },
+  
+    "microstructure_outputs": {
+      "final_grain_size": "3–6 µm",
+      "grain_morphology": "Equiaxed",
+      "recrystallization_type": "Dynamic",
+      "precipitate_condition": "Refined",
+      "second_phase_particles": "MgZn2",
+      "phase_transformation_details": null,
+      "defect_type": "None",
+      "grain_refinement_factor": "≈3×"
+    },
+  
+    "mechanical_outputs": {
+      "measured_hardness": "139 HV",
+      "yield_strength": "252 MPa",
+      "ultimate_tensile_strength": "310 MPa",
+      "ductility_percentage": "18 %",
+      "Elongation_percentage": "18 %"
+    }
+  }
+  
