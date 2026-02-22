@@ -261,6 +261,9 @@ if __name__ == "__main__":
     import os
 
     rows = flatten_all_papers()
+    #DataFrame is used for TWO purposes only
+    #Purpose 1: Visual inspection: Without DataFrame you'd be staring at raw Python dicts — very hard to read.
+    #Purpose 2: Easy CSV export
     df = pd.DataFrame(rows)
 
     print(f"\n--- Table Shape ---")
