@@ -139,7 +139,7 @@ Convert the user's natural language question into a valid SQLite SQL query.
 RULES YOU MUST FOLLOW:
 1. Always return ONLY a valid SQL query — no explanation, no markdown, no backticks
 2. Always SELECT the relevant columns including units (e.g. hardness_unit with hardness_min)
-3. Always include paper_id and base_alloy in SELECT
+3. Always include paper_id,paper_name, and base_alloy in SELECT
 4. For numeric comparisons use the _min column for lower bound, _max for upper bound
 5. For range queries use BETWEEN or >= and <=
 6. For alloy series use LIKE (e.g. base_alloy LIKE 'AA6%' for 6xxx series)
