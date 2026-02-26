@@ -27,13 +27,18 @@ from backend.query.answer_generator import generate_answer
 from backend.query.sql_generator    import generate_sql
 from backend.query.fuzzy_matcher    import get_all_alloys
 from backend.query.router           import route_question
+from backend.database.upload_history import (
+    init_history_db, save_upload, get_all_history, delete_history
+)
 
 # ── Create FastAPI app ────────────────────────────────────────
 app = FastAPI(
     title       = "FSAM Query System",
     description = "Query Friction Stir Additive Manufacturing research papers using natural language",
     version     = "1.0.0"
+    
 )
+init_history_db()
 
 # ── CORS Middleware ───────────────────────────────────────────
 # Allows Streamlit (port 8501) to talk to FastAPI (port 8000)
@@ -260,6 +265,14 @@ async def upload_pdf(file: UploadFile = File(...)):
             file.filename,
             user_collection
         )
+        # Save to history
+        file_size_mb = len(pdf_bytes) / 1_000_000
+        save_upload(
+            filename     = file.filename,
+            paper_id     = result.get("paper_id", ""),
+            chunks_added = result.get("added_chunks", 0),
+            file_size_mb = file_size_mb
+        )
 
         return {
             "filename":     file.filename,
@@ -273,5 +286,28 @@ async def upload_pdf(file: UploadFile = File(...)):
             )
         }
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/history")
+def get_history():
+    """Returns all uploaded paper history."""
+    try:
+        history = get_all_history()
+        return {"history": history, "count": len(history)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/history/{record_id}")
+def delete_history_record(record_id: int):
+    """Deletes one record from upload history."""
+    try:
+        deleted = delete_history(record_id)
+        if deleted:
+            return {"status": "deleted", "id": record_id}
+        raise HTTPException(status_code=404, detail="Record not found")
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
