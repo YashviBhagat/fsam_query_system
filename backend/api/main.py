@@ -2,20 +2,18 @@
 main.py — FastAPI Backend Server
 ==================================
 
-WHY THIS FILE EXISTS:
-─────────────────────
-This is the bridge between your Streamlit UI and your query pipeline.
-It runs as a server on port 8000 and listens for questions.
-
 ENDPOINTS:
 ──────────
-GET  /          → health check (is server running?)
+GET  /          → health check
 GET  /alloys    → list all alloys in database
-POST /query     → main endpoint (question → answer)
-POST /sql       → returns raw SQL + results (for debugging)
+GET  /stats     → database statistics
+POST /query     → SQL only pipeline
+POST /sql       → raw SQL + results (debug)
+POST /ask       → smart router (SQL + RAG combined)
+POST /upload    → upload user PDF to ChromaDB
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sqlite3
@@ -26,67 +24,72 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from backend.query.answer_generator import generate_answer
-from backend.query.sql_generator import generate_sql
-from backend.query.fuzzy_matcher import get_all_alloys
+from backend.query.sql_generator    import generate_sql
+from backend.query.fuzzy_matcher    import get_all_alloys
+from backend.query.router           import route_question
 
-# ── Create FastAPI app ───────────────────────────────────────
+# ── Create FastAPI app ────────────────────────────────────────
 app = FastAPI(
     title       = "FSAM Query System",
     description = "Query Friction Stir Additive Manufacturing research papers using natural language",
     version     = "1.0.0"
 )
 
-# ── CORS Middleware ──────────────────────────────────────────
-# This allows Streamlit (port 8501) to talk to FastAPI (port 8000)
-# Without this, browser blocks cross-origin requests
+# ── CORS Middleware ───────────────────────────────────────────
+# Allows Streamlit (port 8501) to talk to FastAPI (port 8000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins     = ["*"],   # allow all origins
-    allow_methods     = ["*"],   # allow GET, POST, etc.
+    allow_origins     = ["*"],
+    allow_methods     = ["*"],
     allow_credentials = True,
     allow_headers     = ["*"],
 )
 
 
-# ── Request/Response Models ──────────────────────────────────
-# Pydantic models define exactly what data comes IN and goes OUT
-# FastAPI uses these for automatic validation
+# ── Request / Response Models ─────────────────────────────────
 
 class QueryRequest(BaseModel):
-    """What the user sends to /query"""
-    question: str               # the natural language question
+    question: str
 
 class QueryResponse(BaseModel):
-    """What /query sends back"""
-    question: str               # original question
-    answer:   str               # natural language answer
-    sql:      str | None        # SQL that was generated
-    rows:     int               # number of results found
-    error:    str | None        # error message if something failed
+    question: str
+    answer:   str
+    sql:      str | None
+    rows:     int
+    error:    str | None
 
 class SQLRequest(BaseModel):
-    """What the user sends to /sql"""
     question: str
 
 class SQLResponse(BaseModel):
-    """What /sql sends back"""
     question: str
     sql:      str | None
     columns:  list[str]
     results:  list[list]
     error:    str | None
 
+class AskRequest(BaseModel):
+    question:    str
+    search_user: bool = False
+    # search_user = True when user has uploaded a paper
 
-# ── Endpoints ────────────────────────────────────────────────
+class AskResponse(BaseModel):
+    question:     str
+    route:        str           # "sql", "rag", or "both"
+    final_answer: str
+    sql_answer:   str | None
+    rag_answer:   str | None
+    sql:          str | None
+    rows:         int
+    passages:     list[dict]
+    error:        str | None
+
+
+# ── Endpoints ─────────────────────────────────────────────────
 
 @app.get("/")
 def health_check():
-    """
-    Health check endpoint.
-    Call this to confirm server is running.
-
-    Returns: {"status": "ok", "message": "FSAM Query System is running"}
-    """
+    """Confirms server is running."""
     return {
         "status":  "ok",
         "message": "FSAM Query System is running",
@@ -96,18 +99,55 @@ def health_check():
 
 @app.get("/alloys")
 def get_alloys():
-    """
-    Returns all unique alloy names in the database.
-    Streamlit uses this to show a dropdown of available alloys.
-
-    Returns: {"alloys": ["AA6061", "AA7075", ...], "count": 25}
-    """
+    """Returns all unique alloy names in database."""
     try:
         alloys = get_all_alloys()
+        return {"alloys": alloys, "count": len(alloys)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/stats")
+def get_stats():
+    """Returns database statistics for Streamlit sidebar."""
+    try:
+        conn   = sqlite3.connect("data/processed/fsam_data.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM papers")
+        total_papers = cursor.fetchone()[0]
+
+        cursor.execute("""
+            SELECT COUNT(DISTINCT base_alloy) FROM papers
+            WHERE base_alloy IS NOT NULL
+        """)
+        total_alloys = cursor.fetchone()[0]
+
+        cursor.execute("""
+            SELECT process_category, COUNT(*) as count
+            FROM papers
+            WHERE process_category IS NOT NULL
+            GROUP BY process_category
+            ORDER BY count DESC
+        """)
+        processes = {row[0]: row[1] for row in cursor.fetchall()}
+
+        cursor.execute("SELECT COUNT(*) FROM papers WHERE hardness_min IS NOT NULL")
+        hardness_count = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM papers WHERE uts_min IS NOT NULL")
+        uts_count = cursor.fetchone()[0]
+
+        conn.close()
+
         return {
-            "alloys": alloys,
-            "count":  len(alloys)
+            "total_papers":   total_papers,
+            "total_alloys":   total_alloys,
+            "processes":      processes,
+            "hardness_count": hardness_count,
+            "uts_count":      uts_count,
         }
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -115,35 +155,11 @@ def get_alloys():
 @app.post("/query", response_model=QueryResponse)
 def query(request: QueryRequest):
     """
-    MAIN ENDPOINT — natural language question → answer.
-
-    FLOW:
-    1. Receives question from Streamlit
-    2. Passes to fuzzy_matcher → finds alloy
-    3. Passes to sql_generator → generates SQL
-    4. Runs SQL on database
-    5. Passes to answer_generator → formats answer
-    6. Returns answer to Streamlit
-
-    Example request:
-    {
-        "question": "What is the hardness of AA6061?"
-    }
-
-    Example response:
-    {
-        "question": "What is the hardness of AA6061?",
-        "answer":   "AA6061 hardness ranges from 43.8 to 110.0 HV...",
-        "sql":      "SELECT paper_id, base_alloy...",
-        "rows":     11,
-        "error":    null
-    }
+    SQL only pipeline.
+    question → fuzzy_matcher → sql_generator → SQLite → answer
     """
     if not request.question.strip():
-        raise HTTPException(
-            status_code = 400,
-            detail      = "Question cannot be empty"
-        )
+        raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     try:
         result = generate_answer(request.question)
@@ -162,25 +178,9 @@ def query(request: QueryRequest):
 def get_sql(request: SQLRequest):
     """
     Debug endpoint — returns raw SQL and results without formatting.
-    Useful for developers to see exactly what SQL was generated.
-
-    Example request:
-    {
-        "question": "What is hardness of AA6061?"
-    }
-
-    Example response:
-    {
-        "sql":     "SELECT paper_id...",
-        "columns": ["paper_id", "base_alloy", "hardness_min"],
-        "results": [["paper_27", "AA6061", 86.3], ...]
-    }
     """
     if not request.question.strip():
-        raise HTTPException(
-            status_code = 400,
-            detail      = "Question cannot be empty"
-        )
+        raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     try:
         result = generate_sql(request.question)
@@ -195,62 +195,82 @@ def get_sql(request: SQLRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/stats")
-def get_stats():
+@app.post("/ask", response_model=AskResponse)
+def ask(request: AskRequest):
     """
-    Returns database statistics.
-    Streamlit uses this for the dashboard/stats page.
+    Smart router endpoint — decides SQL, RAG, or both.
 
-    Returns counts of papers, alloys, processes etc.
+    Difference from /query:
+    /query → always SQL only
+    /ask   → router decides SQL, RAG, or both
+
+    Use /ask for all Streamlit queries.
     """
+    if not request.question.strip():
+        raise HTTPException(status_code=400, detail="Question cannot be empty")
+
     try:
-        conn   = sqlite3.connect("data/processed/fsam_data.db")
-        cursor = conn.cursor()
+        result = route_question(
+            request.question,
+            search_user = request.search_user
+        )
 
-        # Total papers
-        cursor.execute("SELECT COUNT(*) FROM papers")
-        total_papers = cursor.fetchone()[0]
+        return AskResponse(
+            question     = result["question"],
+            route        = result["route"],
+            final_answer = result.get("final_answer") or "",
+            sql_answer   = result.get("sql_answer"),
+            rag_answer   = result.get("rag_answer"),
+            sql          = result.get("sql"),
+            rows         = result.get("rows", 0),
+            passages     = result.get("passages", []),
+            error        = result.get("error")
+        )
 
-        # Unique alloys
-        cursor.execute("""
-            SELECT COUNT(DISTINCT base_alloy)
-            FROM papers
-            WHERE base_alloy IS NOT NULL
-        """)
-        total_alloys = cursor.fetchone()[0]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-        # Papers per process
-        cursor.execute("""
-            SELECT process_category, COUNT(*) as count
-            FROM papers
-            WHERE process_category IS NOT NULL
-            GROUP BY process_category
-            ORDER BY count DESC
-        """)
-        processes = {row[0]: row[1] for row in cursor.fetchall()}
 
-        # Hardness coverage
-        cursor.execute("""
-            SELECT COUNT(*) FROM papers
-            WHERE hardness_min IS NOT NULL
-        """)
-        hardness_count = cursor.fetchone()[0]
+@app.post("/upload")
+async def upload_pdf(file: UploadFile = File(...)):
+    """
+    Upload a PDF and add it to ChromaDB user collection.
 
-        # UTS coverage
-        cursor.execute("""
-            SELECT COUNT(*) FROM papers
-            WHERE uts_min IS NOT NULL
-        """)
-        uts_count = cursor.fetchone()[0]
+    After uploading → send search_user=True in /ask requests
+    to include uploaded paper in RAG search.
+    """
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(
+            status_code = 400,
+            detail      = "Only PDF files are accepted"
+        )
 
-        conn.close()
+    try:
+        # Read uploaded bytes
+        pdf_bytes = await file.read()
+
+        # Get user ChromaDB collection
+        from backend.database.chroma_client import get_collections
+        _, user_collection = get_collections()
+
+        # Process and store in ChromaDB
+        from backend.embeddings.embedder import process_uploaded_pdf
+        result = process_uploaded_pdf(
+            pdf_bytes,
+            file.filename,
+            user_collection
+        )
 
         return {
-            "total_papers":   total_papers,
-            "total_alloys":   total_alloys,
-            "processes":      processes,
-            "hardness_count": hardness_count,
-            "uts_count":      uts_count,
+            "filename":     file.filename,
+            "paper_id":     result.get("paper_id"),
+            "chunks_added": result.get("added_chunks", 0),
+            "status":       result.get("status"),
+            "message":      (
+                f"Successfully processed {file.filename}. "
+                f"Added {result.get('added_chunks', 0)} chunks. "
+                f"Now send search_user=true in /ask requests."
+            )
         }
 
     except Exception as e:
