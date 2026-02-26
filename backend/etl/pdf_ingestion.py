@@ -4,6 +4,7 @@ pdf_ingestion.py — Read PDFs and Extract Text
 ONE JOB ONLY: Open PDF files and return their text.
 
 """
+import os
 import fitz
 from pathlib import Path
 
@@ -135,6 +136,77 @@ def load_all_pdfs() -> list[dict]:
     print(f"\n✅ Loaded text from {len(papers)}/{len(pdf_files)} PDFs")
     return papers
 
+def process_uploaded_pdf(pdf_bytes: bytes, filename: str, user_collection) -> dict:
+    """
+    Processes a PDF uploaded by a user through Streamlit.
+
+    DIFFERENCE FROM load_all_pdfs:
+    ────────────────────────────────
+    load_all_pdfs  → reads files FROM DISK
+    process_uploaded_pdf → receives BYTES from Streamlit uploader
+
+    Steps:
+    1. Save bytes to temp file
+    2. Extract text using fitz
+    3. Split into chunks
+    4. Store in user_collection (separate from your 57 papers)
+    5. Delete temp file
+    """
+    import re
+    from backend.etl.chunker import split_into_chunks
+    from backend.database.chroma_client import get_collections
+
+    # Save bytes to temp file
+    temp_dir  = Path("data/temp")
+    os.makedirs(temp_dir, exist_ok=True)
+
+    temp_path = temp_dir / filename
+    with open(temp_path, "wb") as f:
+        f.write(pdf_bytes)
+        # "wb" = write binary mode
+
+    # Create paper_id from filename
+    paper_id = Path(filename).stem
+    paper_id = re.sub(r'[^a-zA-Z0-9_]', '_', paper_id)
+    # "My Paper (2024)" → "My_Paper__2024_"
+
+    # Extract text
+    text = extract_text_from_pdf(temp_path)
+
+    if not text.strip():
+        os.remove(temp_path)
+        return {
+            "filename": filename,
+            "chunks":   0,
+            "status":   "failed - no text extracted"
+        }
+
+    # Split into chunks
+    chunks = split_into_chunks(text, paper_id)
+
+    # Store in user collection
+    added = 0
+    for chunk in chunks:
+        existing = user_collection.get(ids=[chunk["id"]])
+        if len(existing["ids"]) == 0:
+            user_collection.add(
+                ids       = [chunk["id"]],
+                documents = [chunk["text"]],
+                metadatas = [chunk["metadata"]]
+            )
+            added += 1
+
+    # Clean up temp file
+    os.remove(temp_path)
+
+    return {
+        "filename":     filename,
+        "paper_id":     paper_id,
+        "total_chunks": len(chunks),
+        "added_chunks": added,
+        "status":       "success"
+    }
+
 
 # ── TEST ──────────────────────────────────────────────────────
 if __name__ == "__main__":
@@ -152,6 +224,6 @@ if __name__ == "__main__":
         print(f"File:   {first['pdf_name']}")
         print(f"Pages:  {first['page_count']}")
         print(f"Words:  {len(first['text'].split())}")
-        
+
         print(f"\nFirst 200 characters:")
         print(first['text'][:200])

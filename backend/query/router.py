@@ -4,30 +4,20 @@ router.py — Decide SQL vs RAG per Question
 ONE JOB ONLY: Look at the user question and decide
 whether to use SQL or RAG to answer it.
 
-TWO TYPES OF QUESTIONS:
-────────────────────────
+THREE TYPES OF QUESTIONS:
+──────────────────────────
 SQL questions → ask for specific numbers/data
     "What is the hardness of AA6061?"
     "Which alloy has highest UTS?"
-    "Show papers with rotation speed above 1000 rpm"
 
 RAG questions → ask for explanation/mechanism
     "Why does grain size decrease in AFSD?"
     "How does rotation speed affect microstructure?"
-    "What happens when traverse velocity increases?"
-    "Explain the recrystallization mechanism"
 
-HOW WE DECIDE:
-───────────────
-We look for trigger words in the question:
-    "why", "how", "explain", "mechanism" → RAG
-    "what is", "show", "compare"         → SQL
-
-Some questions need BOTH:
-    "What is hardness of AA6061 and why is it high?"
-    → SQL for the number
-    → RAG for the explanation
-    → Combined answer
+UPLOADED PAPER questions → ask about user's specific paper
+    "What is the base alloy in the paper?"
+    "What does this study conclude?"
+    → Skips SQL entirely, searches ONLY uploaded paper
 """
 
 import os
@@ -37,13 +27,9 @@ sys.path.append(os.path.dirname(os.path.dirname(
                 os.path.dirname(__file__))))
 
 from backend.query.answer_generator import generate_answer
-# generate_answer() = SQL pipeline (question → SQL → answer)
-
-from backend.query.rag_retriever import retrieve
-# retrieve() = RAG pipeline (question → ChromaDB → passages)
-
-from groq import Groq
-from dotenv import load_dotenv
+from backend.query.rag_retriever    import retrieve
+from groq       import Groq
+from dotenv     import load_dotenv
 
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -52,7 +38,18 @@ MODEL  = "llama-3.3-70b-versatile"
 
 # ── TRIGGER WORDS ─────────────────────────────────────────────
 
-# These words in a question → use RAG
+# These words → user is asking about their uploaded paper
+# When found + user has uploaded a paper → skip SQL, search uploaded paper only
+USER_PAPER_TRIGGERS = [
+    "the paper", "this paper", "my paper",
+    "uploaded paper", "the study", "this study",
+    "the article", "this article", "the document",
+    "in this", "in the paper", "from the paper",
+    "the authors", "the researchers", "the uploaded",
+    "that paper", "this research", "the research"
+]
+
+# These words → use RAG pipeline
 RAG_TRIGGERS = [
     "why", "how", "explain", "mechanism", "reason",
     "cause", "effect", "what happens", "describe",
@@ -61,7 +58,7 @@ RAG_TRIGGERS = [
     "process", "behavior", "behaviour", "phenomenon"
 ]
 
-# These words in a question → use SQL
+# These words → use SQL pipeline
 SQL_TRIGGERS = [
     "what is the", "what are the", "show", "list",
     "highest", "lowest", "maximum", "minimum",
@@ -71,43 +68,22 @@ SQL_TRIGGERS = [
 ]
 
 
+# ── FUNCTION 1: Classify Question ─────────────────────────────
+
 def classify_question(question: str) -> str:
     """
     Classifies question as "sql", "rag", or "both".
 
-    HOW IT WORKS:
-    ─────────────
-    1. Convert question to lowercase
-    2. Check if any RAG trigger words are present
-    3. Check if any SQL trigger words are present
-    4. Decide based on what was found
-
-    RULES:
-    ──────
-    RAG triggers found + SQL triggers found → "both"
-    Only RAG triggers found                 → "rag"
-    Only SQL triggers found                 → "sql"
-    Nothing found                           → "rag" (default)
-    Why RAG as default?
-    → RAG can handle any question
-    → SQL fails if no alloy/parameter mentioned
-
-    Examples:
-    "What is hardness of AA6061?"     → sql
-    "Why does grain size decrease?"   → rag
-    "What is hardness and why high?"  → both
+    Rules:
+    RAG + SQL triggers found → "both"
+    Only RAG triggers        → "rag"
+    Only SQL triggers        → "sql"
+    Nothing found            → "rag" (safe default)
     """
 
-    q = question.lower()
-    # lowercase for case-insensitive matching
-    # "WHY" and "why" and "Why" all become "why"
-
+    q       = question.lower()
     has_rag = any(trigger in q for trigger in RAG_TRIGGERS)
-    # any() = True if at least one trigger word found
-    # "why does grain size" → "why" found → has_rag = True
-
     has_sql = any(trigger in q for trigger in SQL_TRIGGERS)
-    # "what is the hardness" → "what is the" found → has_sql = True
 
     if has_rag and has_sql:
         return "both"
@@ -117,27 +93,19 @@ def classify_question(question: str) -> str:
         return "sql"
     else:
         return "rag"
-        # Default to RAG — handles open-ended questions better
 
+
+# ── FUNCTION 2: Format RAG Answer ─────────────────────────────
 
 def format_rag_answer(question: str, passages: list[dict]) -> str:
     """
     Sends RAG passages to Groq to write a natural language answer.
-
-    WHAT WE SEND TO GROQ:
-    ──────────────────────
-    1. The user question
-    2. The 5 most relevant passages from ChromaDB
-    3. Instructions to write a clear answer with citations
-
-    Groq reads the passages and synthesizes a coherent answer
-    just like a researcher reading papers and summarizing them.
+    Uses ONLY the provided passages — no outside knowledge.
     """
 
     if not passages:
         return "No relevant passages found in the database."
 
-    # Format passages as numbered list for Groq
     passages_text = ""
     for i, p in enumerate(passages, 1):
         passages_text += f"\n[{i}] From {p['paper_id']}:\n"
@@ -152,7 +120,9 @@ Follow these rules:
 2. Cite which paper supports each claim e.g. (paper_27)
 3. Use proper materials science terminology
 4. If passages don't fully answer the question, say so
-5. Never make up information not in the passages
+5. NEVER make up information not in the passages
+6. Answer ONLY from the provided passages — do NOT use general knowledge
+7. If the answer is directly stated in a passage, state it clearly
 """
 
     user_message = f"""Question: {question}
@@ -160,7 +130,7 @@ Follow these rules:
 Relevant passages from research papers:
 {passages_text}
 
-Please answer the question based on these passages."""
+Please answer the question based ONLY on these passages."""
 
     try:
         response = client.chat.completions.create(
@@ -169,82 +139,139 @@ Please answer the question based on these passages."""
                 {"role": "system", "content": system_prompt},
                 {"role": "user",   "content": user_message}
             ],
-            temperature = 0.3,
+            temperature = 0.1,
+            # 0.1 = very deterministic
+            # Important for factual questions about uploaded paper
             max_tokens  = 600
         )
         return response.choices[0].message.content.strip()
 
     except Exception as e:
-        # Fallback: return raw passages if Groq fails
         return f"Based on research papers:\n\n{passages_text}"
 
 
-def route_question(question: str,
-                   search_user: bool = False) -> dict:
+# ── FUNCTION 3: Main Route Function ───────────────────────────
+
+def route_question(question: str, search_user: bool = False) -> dict:
     """
     Main function — routes question to SQL, RAG, or both.
 
-    RETURNS:
-    ─────────
-    {
-        "question":    original question,
-        "route":       "sql" / "rag" / "both",
-        "sql_answer":  answer from SQL pipeline (or None),
-        "rag_answer":  answer from RAG pipeline (or None),
-        "passages":    list of relevant passages (or []),
-        "sql":         the SQL query used (or None),
-        "rows":        number of SQL results (or 0),
-        "error":       error message (or None)
-    }
+    SPECIAL CASE:
+    If user asks about "the paper" / "this paper" / "uploaded paper"
+    AND they have uploaded a paper (search_user=True)
+    → Skip SQL entirely
+    → Search ONLY the uploaded paper
+    → Return answer from that paper only
+
+    This prevents the system from answering about the database
+    when user clearly means their uploaded paper.
     """
 
-    # Step 1: Classify the question
-    route = classify_question(question)
-
+    # Initialize result dict
     result = {
-        "question":   question,
-        "route":      route,
-        "sql_answer": None,
-        "rag_answer": None,
-        "passages":   [],
-        "sql":        None,
-        "rows":       0,
-        "error":      None
+        "question":     question,
+        "route":        "rag",
+        "final_answer": None,
+        "sql_answer":   None,
+        "rag_answer":   None,
+        "passages":     [],
+        "sql":          None,
+        "rows":         0,
+        "error":        None
     }
 
-    # Step 2: SQL path
-    if route in ["sql", "both"]:
-        sql_result = generate_answer(question)
-        result["sql_answer"] = sql_result["answer"]
-        result["sql"]        = sql_result["sql"]
-        result["rows"]       = sql_result["rows"]
+    # ── SPECIAL CASE: Question about uploaded paper ───────────
+    # Check BEFORE normal routing so SQL never runs for these
+    q_lower             = question.lower()
+    asking_about_upload = any(t in q_lower for t in USER_PAPER_TRIGGERS)
 
-        if sql_result["error"]:
-            result["error"] = sql_result["error"]
-
-    # Step 3: RAG path
-    if route in ["rag", "both"]:
+    if asking_about_upload and search_user:
+        # User is asking about their uploaded paper specifically
+        # Force RAG on user collection only — skip SQL and database
         rag_result = retrieve(
             question,
-            search_fsam = True,
-            search_user = search_user
-            # search_user = True when user has uploaded a paper
+            search_fsam = False,   # skip your 57 papers
+            search_user = True     # only search uploaded paper
         )
 
-        result["passages"] = rag_result["passages"]
+        result["route"]    = "rag"
+        result["passages"] = rag_result.get("passages", [])
 
-        if rag_result["passages"]:
-            result["rag_answer"] = format_rag_answer(
+        if result["passages"]:
+            result["rag_answer"]   = format_rag_answer(
                 question,
-                rag_result["passages"]
+                result["passages"]
             )
+            result["final_answer"] = result["rag_answer"]
         else:
-            result["rag_answer"] = "No relevant passages found."
+            result["final_answer"] = (
+                "Could not find relevant information in your uploaded paper. "
+                "Try rephrasing your question."
+            )
+
+        return result
+        # Returns here — SQL never runs
+
+    # ── NORMAL ROUTING ────────────────────────────────────────
+    route          = classify_question(question)
+    result["route"] = route
+
+    # SQL path
+    if route in ["sql", "both"]:
+        try:
+            sql_result = generate_answer(question)
+            result["sql_answer"] = sql_result.get("answer")
+            result["sql"]        = sql_result.get("sql")
+            result["rows"]       = sql_result.get("rows", 0)
+
+            if sql_result.get("error"):
+                result["error"] = sql_result["error"]
+        except Exception as e:
+            result["error"] = f"SQL error: {str(e)}"
+
+    # RAG path
+    if route in ["rag", "both"]:
+        try:
+            rag_result = retrieve(
+                question,
+                search_fsam = True,
+                search_user = search_user
+            )
+
+            result["passages"] = rag_result.get("passages", [])
+
+            if result["passages"]:
+                result["rag_answer"] = format_rag_answer(
+                    question,
+                    result["passages"]
+                )
+            else:
+                result["rag_answer"] = "No relevant passages found."
+
+        except Exception as e:
+            result["error"] = f"RAG error: {str(e)}"
+
+    # Build final answer
+    if route == "both":
+        parts = []
+        if result["sql_answer"]:
+            parts.append(f"📊 Data:\n{result['sql_answer']}")
+        if result["rag_answer"]:
+            parts.append(f"📖 Explanation:\n{result['rag_answer']}")
+        result["final_answer"] = "\n\n".join(parts)
+    elif route == "sql":
+        result["final_answer"] = result["sql_answer"]
+    elif route == "rag":
+        result["final_answer"] = result["rag_answer"]
+
+    if not result["final_answer"]:
+        result["final_answer"] = "Could not generate an answer. Try rephrasing."
 
     return result
 
 
 # ── TEST ──────────────────────────────────────────────────────
+
 if __name__ == "__main__":
 
     print("=" * 60)
@@ -252,29 +279,21 @@ if __name__ == "__main__":
     print("=" * 60)
 
     test_questions = [
-        # SQL questions
-        "What is the hardness of AA6061?",
-        "Which alloy has the highest UTS?",
-
-        # RAG questions
-        "Why does grain size decrease in AFSD?",
-        "How does rotation speed affect microstructure?",
-
-        # Both
-        "What is hardness of AA6061 and why is it high?",
+        ("What is the hardness of AA6061?",               "expect: sql"),
+        ("Which alloy has the highest UTS?",              "expect: sql"),
+        ("Why does grain size decrease in AFSD?",         "expect: rag"),
+        ("How does rotation speed affect microstructure?","expect: rag"),
+        ("What is hardness of AA6061 and why is it high?","expect: both"),
     ]
 
-    for question in test_questions:
+    for question, expectation in test_questions:
         print(f"\n{'='*60}")
-        print(f"Q: {question}")
+        print(f"Q: {question}  ({expectation})")
 
         result = route_question(question)
         print(f"Route: {result['route'].upper()}")
 
         if result["sql_answer"]:
-            print(f"\n📊 SQL Answer:")
-            print(f"   {result['sql_answer'][:200]}")
-
+            print(f"\n📊 SQL: {result['sql_answer'][:200]}")
         if result["rag_answer"]:
-            print(f"\n📖 RAG Answer:")
-            print(f"   {result['rag_answer'][:200]}")
+            print(f"\n📖 RAG: {result['rag_answer'][:200]}")

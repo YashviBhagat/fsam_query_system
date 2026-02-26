@@ -254,7 +254,7 @@ async def upload_pdf(file: UploadFile = File(...)):
         _, user_collection = get_collections()
 
         # Process and store in ChromaDB
-        from backend.embeddings.embedder import process_uploaded_pdf
+        from backend.etl.pdf_ingestion import process_uploaded_pdf
         result = process_uploaded_pdf(
             pdf_bytes,
             file.filename,
