@@ -22,22 +22,40 @@ With overlap (100 words):
     chunk_3: words 800–1299
     Benefit: context always preserved at boundaries
 
+IMPROVEMENT — SECTION-AWARE CHUNKING:
+───────────────────────────────────────
+Old approach: split every 500 words regardless of structure
+New approach: detect section boundaries (Abstract, Conclusion etc.)
+              keep important sections as priority chunks
+              then do regular word-count chunking for the rest
+
+This ensures Abstract and Conclusions are always retrievable.
+
 Input:  raw text string + paper_id
 Output: list of chunk dicts ready for ChromaDB
 """
 
 import re
-# re = regular expressions
-# Used to clean text before chunking
-# re.sub() = substitute/replace patterns
-
 
 # ── CONSTANTS ─────────────────────────────────────────────────
-CHUNK_SIZE    = 500   # words per chunk
-CHUNK_OVERLAP = 100   # words shared between consecutive chunks
-MIN_CHUNK_WORDS = 50  # skip chunks smaller than this
-# Chunks under 50 words are usually:
-# headers, page numbers, reference lists — not useful for search
+CHUNK_SIZE      = 500   # words per chunk
+CHUNK_OVERLAP   = 100   # words shared between consecutive chunks
+MIN_CHUNK_WORDS = 50    # skip chunks smaller than this
+
+# Section headers that indicate important content
+# These are detected and kept as priority chunks
+IMPORTANT_SECTIONS = [
+    "abstract",
+    "conclusion",
+    "conclusions",
+    "summary",
+    "introduction",
+    "results",
+    "discussion",
+    "findings",
+    "objectives",
+    "highlights",
+]
 
 
 def clean_text(text: str) -> str:
@@ -49,126 +67,212 @@ def clean_text(text: str) -> str:
     - Weird line breaks inside sentences
     - Page numbers floating in the middle
     - Headers/footers repeated on every page
-
-    We fix the most common issues here.
-
-    Example:
-    "grain  size\n\ndecreased  due  to"
-    → "grain size decreased due to"
     """
 
     # Replace multiple spaces with single space
-    # r'\s+' = match one or more whitespace characters
-    # ' '    = replace with single space
     text = re.sub(r'\s+', ' ', text)
 
-    # Remove common PDF artifacts
-    # Lines that are just numbers (page numbers)
+    # Remove common PDF artifacts — lines that are just numbers
     text = re.sub(r'\n\d+\n', ' ', text)
 
     # Remove excessive newlines
     text = re.sub(r'\n{3,}', '\n\n', text)
 
     return text.strip()
-    # .strip() removes leading/trailing whitespace
+
+
+def extract_abstract(text: str) -> str | None:
+    """
+    Tries to extract the abstract from paper text.
+
+    Looks for text between "Abstract" and the next section header.
+    Returns the abstract text if found, None otherwise.
+
+    Example:
+    "Abstract This study investigates... 1. Introduction..."
+    → "This study investigates..."
+    """
+
+    # Pattern: "abstract" followed by text until next section
+    # (?i) = case insensitive
+    # (.+?) = non-greedy match of any characters
+    pattern = r'(?i)abstract\s*(.+?)(?=\n\s*\d+\.|introduction|keywords|1\s+introduction)'
+
+    match = re.search(pattern, text, re.DOTALL)
+
+    if match:
+        abstract_text = match.group(1).strip()
+        # Only return if it is a reasonable length
+        if 50 <= len(abstract_text.split()) <= 500:
+            return abstract_text
+
+    return None
+
+
+def extract_conclusions(text: str) -> str | None:
+    """
+    Tries to extract the conclusions section from paper text.
+
+    Looks for text starting with "conclusion" or "conclusions"
+    and ending at the next major section (references, acknowledgements).
+
+    Returns the conclusions text if found, None otherwise.
+    """
+
+    # Pattern: conclusion/conclusions header followed by text
+    pattern = r'(?i)(?:conclusion|conclusions)\s*\n?\s*(.+?)(?=references|acknowledgement|acknowledgment|funding|appendix|$)'
+
+    match = re.search(pattern, text, re.DOTALL)
+
+    if match:
+        conclusion_text = match.group(1).strip()
+        conclusion_text = re.sub(r'^[^A-Za-z]+', '', conclusion_text)
+        # Clean up and limit size
+        conclusion_text = re.sub(r'\s+', ' ', conclusion_text)
+        words = conclusion_text.split()
+
+        if len(words) >= MIN_CHUNK_WORDS:
+            # If very long, take first 600 words
+            if len(words) > 600:
+                conclusion_text = ' '.join(words[:600])
+            return conclusion_text
+
+    return None
+
+
+def make_chunk(text: str, paper_id: str, chunk_idx: int,
+               start_word: int, section: str = "body") -> dict:
+    """
+    Creates a single chunk dict ready for ChromaDB.
+
+    Parameters:
+    ────────────
+    text       = chunk text content
+    paper_id   = which paper this chunk is from
+    chunk_idx  = chunk number (for unique ID)
+    start_word = word position in original text
+    section    = "abstract", "conclusion", "body"
+                 Used to prioritize retrieval
+    """
+    words = text.split()
+    return {
+        "id":   f"{paper_id}_chunk_{chunk_idx}",
+        "text": text,
+        "metadata": {
+            "paper_id":    paper_id,
+            "chunk_index": chunk_idx,
+            "start_word":  start_word,
+            "word_count":  len(words),
+            "section":     section,
+            # section tag helps identify where chunk came from
+            # "abstract"   = first chunk, contains objective
+            # "conclusion" = last section, contains findings
+            # "body"       = main content
+        }
+    }
 
 
 def split_into_chunks(text: str, paper_id: str) -> list[dict]:
     """
-    Splits text into overlapping chunks of CHUNK_SIZE words.
+    Splits text into overlapping chunks with section awareness.
 
-    HOW IT WORKS STEP BY STEP:
-    ───────────────────────────
-    text = "The grain size decreased due to dynamic recrystallization..."
-    paper_id = "paper_1"
+    STRATEGY:
+    ─────────
+    Step 1: Extract abstract → add as dedicated chunk
+    Step 2: Extract conclusions → add as dedicated chunk
+    Step 3: Split full text into regular word-count chunks
+    Step 4: Remove duplicates (abstract/conclusion overlap with body)
+    Step 5: Return all chunks sorted by position
 
-    Step 1: Clean text
-    Step 2: Split into words
-            ["The", "grain", "size", "decreased", ...]
-
-    Step 3: Take first 500 words → chunk_0
-            words[0:500]
-
-    Step 4: Move forward 400 words (500 - 100 overlap)
-            Take words[400:900] → chunk_1
-
-    Step 5: Move forward 400 words
-            Take words[800:1300] → chunk_2
-
-    Step 6: Repeat until end of paper
-
-    EACH CHUNK RETURNS:
+    WHY THIS IS BETTER:
     ────────────────────
+    Old:  "What is the objective?" → might miss abstract chunk
+    New:  Abstract is ALWAYS chunk_0 → always findable
+
+    Old:  "What are the conclusions?" → might get methods section
+    New:  Conclusion is ALWAYS a dedicated chunk → always findable
+
+    Each chunk contains:
     {
-        "id":       "paper_1_chunk_0"   ← unique ID for ChromaDB
-        "text":     "The grain size..." ← actual text content
+        "id":       "paper_1_chunk_0"
+        "text":     "This study investigates..."
         "metadata": {
-            "paper_id":    "paper_1"    ← which paper
-            "chunk_index": 0            ← chunk number
-            "start_word":  0            ← position in paper
-            "word_count":  500          ← size of chunk
+            "paper_id":    "paper_1"
+            "chunk_index": 0
+            "start_word":  0
+            "word_count":  245
+            "section":     "abstract"   ← NEW
         }
     }
-
-    The metadata is stored alongside the vector in ChromaDB.
-    When RAG finds a matching chunk, metadata tells us
-    exactly which paper and position it came from.
     """
 
     # Step 1: Clean text
     text = clean_text(text)
-
-    # Step 2: Split into words
     words = text.split()
-    # "The grain size" → ["The", "grain", "size"]
 
     if len(words) < MIN_CHUNK_WORDS:
-        # Entire text is too short to be useful
         return []
 
     chunks    = []
     chunk_idx = 0
-    start     = 0
 
-    # Step 3-6: Build chunks with overlap
-    while start < len(words):
-
-        end = start + CHUNK_SIZE
-        # end = where this chunk stops
-        # start=0, CHUNK_SIZE=500 → end=500
-        # start=400, CHUNK_SIZE=500 → end=900
-
-        chunk_words = words[start:end]
-        # words[0:500]   = first 500 words
-        # words[400:900] = words 400 to 899
-
-        chunk_text = " ".join(chunk_words)
-        # ["The", "grain", "size"] → "The grain size"
-
-        # Only keep chunks with enough content
-        if len(chunk_words) >= MIN_CHUNK_WORDS:
-            chunks.append({
-                # Unique ID — must be unique across ALL chunks in ChromaDB
-                # paper_1_chunk_0, paper_1_chunk_1, paper_1_chunk_2...
-                "id": f"{paper_id}_chunk_{chunk_idx}",
-
-                # The actual text content
-                "text": chunk_text,
-
-                # Metadata stored alongside the vector
-                "metadata": {
-                    "paper_id":    paper_id,
-                    "chunk_index": chunk_idx,
-                    "start_word":  start,
-                    "word_count":  len(chunk_words)
-                }
-            })
-
-        # Move to next chunk start position
-        # Step forward by (CHUNK_SIZE - CHUNK_OVERLAP)
-        # 500 - 100 = 400 → next chunk starts 400 words later
-        start     += (CHUNK_SIZE - CHUNK_OVERLAP)
+    # ── Priority Chunk 1: Abstract ───────────────────────────
+    # Extract and store abstract as first chunk
+    abstract = extract_abstract(text)
+    if abstract:
+        chunks.append(make_chunk(
+            text       = abstract,
+            paper_id   = paper_id,
+            chunk_idx  = chunk_idx,
+            start_word = 0,
+            section    = "abstract"
+        ))
         chunk_idx += 1
+        print(f"    📋 Abstract chunk extracted ({len(abstract.split())} words)")
+
+    # ── Priority Chunk 2: Conclusions ────────────────────────
+    # Extract and store conclusions as dedicated chunk
+    conclusions = extract_conclusions(text)
+    if conclusions:
+        # Find approximate word position of conclusions in text
+        conclusion_pos = text.lower().find("conclusion")
+        if conclusion_pos > 0:
+            words_before = len(text[:conclusion_pos].split())
+        else:
+            words_before = len(words) - len(conclusions.split())
+
+        chunks.append(make_chunk(
+            text       = conclusions,
+            paper_id   = paper_id,
+            chunk_idx  = chunk_idx,
+            start_word = words_before,
+            section    = "conclusion"
+        ))
+        chunk_idx += 1
+        print(f"    📋 Conclusion chunk extracted ({len(conclusions.split())} words)")
+
+    # ── Regular Chunks: Full Text ────────────────────────────
+    # Split full text into word-count chunks with overlap
+    # These cover everything including sections we did not extract
+    start = 0
+
+    while start < len(words):
+        end         = start + CHUNK_SIZE
+        chunk_words = words[start:end]
+        chunk_text  = " ".join(chunk_words)
+
+        if len(chunk_words) >= MIN_CHUNK_WORDS:
+            chunks.append(make_chunk(
+                text       = chunk_text,
+                paper_id   = paper_id,
+                chunk_idx  = chunk_idx,
+                start_word = start,
+                section    = "body"
+            ))
+            chunk_idx += 1
+
+        # Move forward by CHUNK_SIZE - CHUNK_OVERLAP
+        start += (CHUNK_SIZE - CHUNK_OVERLAP)
 
     return chunks
 
@@ -181,16 +285,7 @@ def chunk_all_papers(papers: list[dict], paper_id_map: dict) -> list[dict]:
     {
         "paper1":  "paper_1",
         "paper27": "paper_27",
-        "paper7":  "paper_7"
     }
-
-    WHY WE NEED paper_id_map:
-    ──────────────────────────
-    PDF filename:  "paper1"   (no underscore)
-    JSON paper_id: "paper_1"  (with underscore)
-
-    Chunks must use the JSON paper_id so RAG can
-    link text answers back to structured database data.
 
     Returns ALL chunks from ALL papers as one flat list.
     """
@@ -198,21 +293,20 @@ def chunk_all_papers(papers: list[dict], paper_id_map: dict) -> list[dict]:
     all_chunks = []
 
     for paper in papers:
-        # Get the correct paper_id for this PDF
-        # paper["pdf_stem"] = "paper1", "paper27" etc.
         pdf_stem = paper["pdf_stem"]
         paper_id = paper_id_map.get(pdf_stem, pdf_stem)
-        # .get(key, default) = get value or use default if not found
-        # If "paper1" not in map → use "paper1" as fallback
 
-        # Split this paper's text into chunks
         chunks = split_into_chunks(paper["text"], paper_id)
 
         all_chunks.extend(chunks)
-        # extend() adds all items from chunks to all_chunks
-        # Like append() but for a list of items at once
 
-        print(f"  ✅ {paper['pdf_name']:20} → {len(chunks)} chunks")
+        # Count by section type
+        abstract_chunks    = sum(1 for c in chunks if c["metadata"]["section"] == "abstract")
+        conclusion_chunks  = sum(1 for c in chunks if c["metadata"]["section"] == "conclusion")
+        body_chunks        = sum(1 for c in chunks if c["metadata"]["section"] == "body")
+
+        print(f"  ✅ {paper['pdf_name']:30} → {len(chunks)} chunks "
+              f"(abs:{abstract_chunks} conc:{conclusion_chunks} body:{body_chunks})")
 
     print(f"\n  Total chunks: {len(all_chunks)}")
     return all_chunks
@@ -224,24 +318,13 @@ def build_paper_id_map(pdf_stems: list[str]) -> dict:
 
     PDF stems:   ["paper1", "paper7", "paper27"]
     JSON ids:    ["paper_1", "paper_7", "paper_27"]
-
-    HOW:
-    "paper1"  → insert _ → "paper_1"
-    "paper27" → insert _ → "paper_27"
-
-    Uses same regex as before:
-    r'(paper)(\d+)' finds "paper" then digits
-    r'\1_\2' inserts _ between them
     """
 
     mapping = {}
 
     for stem in pdf_stems:
-        # Insert underscore between "paper" and number
         paper_id = re.sub(r'(paper)(\d+)', r'\1_\2', stem)
         mapping[stem] = paper_id
-        # "paper1"  → "paper_1"
-        # "paper27" → "paper_27"
 
     return mapping
 
@@ -250,42 +333,68 @@ def build_paper_id_map(pdf_stems: list[str]) -> dict:
 if __name__ == "__main__":
 
     print("=" * 50)
-    print("chunker.py — Test")
+    print("chunker.py — Section-Aware Chunking Test")
     print("=" * 50)
 
-    # Import pdf_ingestion to get paper texts
-    import sys
-    import os
-    sys.path.append(os.path.dirname(os.path.dirname(
-                    os.path.dirname(__file__))))
+    # Quick test with sample text
+    sample_text = """
+    Abstract
+    This study investigates the effect of rotation speed on the 
+    microstructure and mechanical properties of AA6061 aluminum alloy 
+    processed by Friction Stir Additive Manufacturing. The main objective 
+    is to optimize process parameters for maximum hardness and minimum 
+    grain size. Results show that higher rotation speeds produce finer 
+    grains due to increased dynamic recrystallization.
 
-    from backend.etl.pdf_ingestion import load_all_pdfs
+    1. Introduction
+    Friction Stir Additive Manufacturing (FSAM) is a solid-state process
+    that deposits material layer by layer using frictional heat and severe
+    plastic deformation. This process has gained significant attention
+    for aluminum alloys due to its ability to produce fine-grained
+    microstructures without melting.
 
-    # Load all PDFs
-    print("\n[Step 1] Loading PDFs...")
-    papers = load_all_pdfs()
+    2. Experimental Methods
+    AA6061-T6 aluminum alloy was used as the feedstock material.
+    Rotation speeds of 800, 1000, and 1200 rpm were investigated.
+    Traverse speed was held constant at 100 mm/min.
+    Hardness testing was performed using Vickers indentation.
+    Grain size was measured using EBSD analysis.
 
-    # Build paper_id mapping
-    print("\n[Step 2] Building paper ID map...")
-    pdf_stems = [p["pdf_stem"] for p in papers]
-    # ["paper1", "paper2", "paper3"...]
+    3. Results
+    Hardness increased from 65 HV to 89 HV as rotation speed 
+    increased from 800 to 1200 rpm. Grain size decreased from 
+    8.2 um to 3.1 um over the same range. Dynamic recrystallization
+    was identified as the primary grain refinement mechanism.
 
-    id_map = build_paper_id_map(pdf_stems)
-    print(f"  Sample mappings:")
-    for stem, pid in list(id_map.items())[:5]:
-        print(f"    {stem} → {pid}")
+    Conclusions
+    This study demonstrates that rotation speed significantly affects
+    the microstructure and mechanical properties of FSAM AA6061.
+    Higher rotation speeds of 1200 rpm produced the finest grain size
+    of 3.1 um and highest hardness of 89 HV. Dynamic recrystallization
+    driven by frictional heat is the dominant microstructural mechanism.
+    These findings provide guidance for optimizing FSAM process parameters
+    for structural aluminum components.
 
-    # Chunk all papers
-    print("\n[Step 3] Chunking all papers...")
-    all_chunks = chunk_all_papers(papers, id_map)
+    References
+    [1] Mishra RS, Ma ZY. Friction stir welding and processing...
+    [2] Rivera OG et al. Additive friction stir deposition...
+    """
 
-    # Show sample chunk
-    if all_chunks:
-        sample = all_chunks[0]
-        print(f"\n--- Sample Chunk ---")
-        print(f"ID:         {sample['id']}")
-        print(f"Paper:      {sample['metadata']['paper_id']}")
-        print(f"Chunk #:    {sample['metadata']['chunk_index']}")
-        print(f"Word count: {sample['metadata']['word_count']}")
-        print(f"\nFirst 200 characters:")
-        print(sample['text'][:200])
+    print("\nTesting section extraction:")
+    abstract = extract_abstract(sample_text)
+    print(f"\nAbstract found: {bool(abstract)}")
+    if abstract:
+        print(f"  {abstract[:150]}...")
+
+    conclusions = extract_conclusions(sample_text)
+    print(f"\nConclusions found: {bool(conclusions)}")
+    if conclusions:
+        print(f"  {conclusions[:150]}...")
+
+    print("\nTesting full chunking:")
+    chunks = split_into_chunks(sample_text, "test_paper")
+    print(f"\nTotal chunks: {len(chunks)}")
+    for c in chunks:
+        print(f"  [{c['metadata']['section']:10}] chunk_{c['metadata']['chunk_index']:02d} "
+              f"| {c['metadata']['word_count']} words "
+              f"| {c['text'][:60]}...")

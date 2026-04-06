@@ -1,986 +1,12 @@
-# # """
-# # app.py — Streamlit Frontend
-# # ============================
-# # Full UI for FSAM Query System.
-# # Connects to FastAPI backend at http://localhost:8000
-
-# # FEATURES:
-# # ──────────
-# # 1. Ask any question (SQL + RAG via /ask endpoint)
-# # 2. Upload your own PDF paper (via /upload endpoint)
-# # 3. See SQL data table + RAG passages
-# # 4. Sidebar with database stats and example questions
-# # """
-
-# # import streamlit as st
-# # import requests
-# # import pandas as pd
-
-# # # ── Configuration ─────────────────────────────────────────────
-# # API_URL = "http://localhost:8000"
-
-# # st.set_page_config(
-# #     page_title = "FSAM Research Assistant",
-# #     page_icon  = "🔬",
-# #     layout     = "wide"
-# # )
-
-# # # ── Header ────────────────────────────────────────────────────
-# # st.title("🔬 FSAM Research Assistant")
-# # st.markdown("Query **Friction Stir Additive Manufacturing** "
-# #             "research papers using natural language.")
-# # st.divider()
-
-# # # ── Sidebar ───────────────────────────────────────────────────
-# # with st.sidebar:
-# #     #st.header("📊 Database Info")
-
-# #     try:
-# #         stats = requests.get(f"{API_URL}/stats", timeout=5).json()
-# #         # st.metric("Total Papers",  stats["total_papers"])
-# #         # st.metric("Unique Alloys", stats["total_alloys"])
-# #         # st.metric("Hardness Data", f"{stats['hardness_count']} papers")
-# #         # st.metric("UTS Data",      f"{stats['uts_count']} papers")
-
-# #         # st.subheader("Papers by Process")
-# #         # for process, count in stats["processes"].items():
-# #         #     st.write(f"**{process}:** {count} papers")
-
-# #     except:
-# #         st.error("Cannot connect to API. Is the server running?")
-
-# #     st.divider()
-
-# #     # ── PDF Upload ───────────────────────────────────────────
-# #     st.subheader("📄 Upload Your Paper")
-# #     st.caption("Upload a PDF to search it alongside the database")
-
-# #     uploaded_file = st.file_uploader(
-# #         "Choose a PDF file",
-# #         type = ["pdf"],
-# #         help = "Your paper will be processed and added to the search index"
-# #     )
-
-# #     if uploaded_file is not None:
-# #         # Show upload button only when file is selected
-# #         if st.button("📤 Process & Add to Search",
-# #                      use_container_width=True,
-# #                      type="primary"):
-
-# #             with st.spinner("Processing PDF..."):
-# #                 try:
-# #                     # Send PDF bytes to FastAPI /upload endpoint
-# #                     response = requests.post(
-# #                         f"{API_URL}/upload",
-# #                         files   = {"file": (
-# #                             uploaded_file.name,
-# #                             uploaded_file.getvalue(),
-# #                             "application/pdf"
-# #                         )},
-# #                         timeout = 60
-# #                     )
-# #                     result = response.json()
-
-# #                     if response.status_code == 200:
-# #                         st.success(
-# #                             f"✅ Added {result['chunks_added']} "
-# #                             f"chunks from {result['filename']}"
-# #                         )
-# #                         # Remember that user has uploaded a paper
-# #                         st.session_state.search_user = True
-# #                         st.session_state.uploaded_paper = result["filename"]
-# #                     else:
-# #                         st.error(f"❌ Upload failed: {result.get('detail')}")
-
-# #                 except Exception as e:
-# #                     st.error(f"❌ Error: {str(e)}")
-
-# #     # Show if a paper is currently loaded
-# #     if st.session_state.get("search_user"):
-# #         st.success(
-# #             f"📄 Searching: {st.session_state.get('uploaded_paper', 'uploaded paper')}"
-# #         )
-# #         if st.button("🗑 Remove uploaded paper"):
-# #             st.session_state.search_user   = False
-# #             st.session_state.uploaded_paper = None
-# #             st.rerun()
-
-# #     st.divider()
-
-# #     # ── Alloy Selector ───────────────────────────────────────
-# #     st.subheader("📋 Available Alloys")
-# #     try:
-# #         alloys_data = requests.get(f"{API_URL}/alloys", timeout=5).json()
-# #         alloys      = alloys_data["alloys"]
-# #         selected    = st.selectbox("Quick select:", [""] + alloys)
-# #     except:
-# #         selected = ""
-# #         st.error("Could not load alloys")
-
-# #     st.divider()
-
-# #     # ── Example Questions ────────────────────────────────────
-# #     st.subheader("💡 Example Questions")
-
-# #     st.caption("📊 Data questions (SQL):")
-# #     sql_examples = [
-# #         "What is the hardness of AA6061?",
-# #         "Which alloy has the highest UTS?",
-# #         "Compare grain size of AA6061 and AA7075",
-# #         "Show papers with rotation speed above 1000 rpm",
-# #     ]
-# #     for ex in sql_examples:
-# #         if st.button(ex, use_container_width=True, key=f"sql_{ex}"):
-# #             st.session_state.question = ex
-
-# #     st.caption("📖 Explanation questions (RAG):")
-# #     rag_examples = [
-# #         "Why does grain size decrease in AFSD?",
-# #         "How does rotation speed affect microstructure?",
-# #         "Explain the recrystallization mechanism in FSAM",
-# #         "What happens when traverse velocity increases?",
-# #     ]
-# #     for ex in rag_examples:
-# #         if st.button(ex, use_container_width=True, key=f"rag_{ex}"):
-# #             st.session_state.question = ex
-
-
-# # # ── Main Query Area ────────────────────────────────────────────
-# # col1, col2 = st.columns([3, 1])
-
-# # with col1:
-# #     default = st.session_state.get("question", "")
-# #     if selected:
-# #         default = f"What are the mechanical properties of {selected}?"
-
-# #     question = st.text_input(
-# #         "Ask a question about FSAM research:",
-# #         value       = default,
-# #         placeholder = "e.g. What is the hardness of AA6061? "
-# #                       "or Why does grain size decrease in AFSD?",
-# #     )
-
-# # with col2:
-# #     st.write("")
-# #     st.write("")
-# #     search = st.button(
-# #         "🔍 Search",
-# #         use_container_width = True,
-# #         type                = "primary"
-# #     )
-
-# # # ── Process Query ──────────────────────────────────────────────
-# # if search and question.strip():
-
-# #     with st.spinner("Searching research papers..."):
-# #         try:
-# #             response = requests.post(
-# #                 f"{API_URL}/ask",
-# #                 json    = {
-# #                     "question":    question,
-# #                     "search_user": st.session_state.get("search_user", False)
-# #                 },
-# #                 timeout = 60
-# #             )
-# #             data = response.json()
-
-# #         except requests.exceptions.ConnectionError:
-# #             st.error("❌ Cannot connect to API. "
-# #                      "Make sure the FastAPI server is running.")
-# #             st.code(".venv/bin/uvicorn backend.api.main:app "
-# #                     "--reload --port 8000")
-# #             st.stop()
-
-# #         except Exception as e:
-# #             st.error(f"❌ Error: {str(e)}")
-# #             st.stop()
-
-# #     # ── Show Route Badge ────────────────────────────────────
-# #     route = data.get("route", "")
-# #     if route == "sql":
-# #         st.info("🗄 **Query type: Database Search** (SQL)")
-# #     elif route == "rag":
-# #         st.info("📖 **Query type: Research Paper Search** (RAG)")
-# #     elif route == "both":
-# #         st.info("🔀 **Query type: Combined** (SQL + RAG)")
-
-# #     # ── Display Results ─────────────────────────────────────
-# #     if data.get("error") and not data.get("final_answer"):
-# #         st.error(f"❌ {data['error']}")
-
-# #     else:
-# #         st.success("✅ Answer found!")
-
-# #         # ── SQL Answer ───────────────────────────────────────
-# #         if data.get("sql_answer"):
-# #             st.markdown("### 📊 Data Answer")
-# #             st.info(data["sql_answer"])
-
-# #             # Metrics row
-# #             m1, m2 = st.columns(2)
-# #             m1.metric("Papers Found", data.get("rows", 0))
-# #             m2.metric("Route", route.upper())
-
-# #         # ── RAG Answer ───────────────────────────────────────
-# #         if data.get("rag_answer"):
-# #             st.markdown("### 📖 Research Explanation")
-# #             st.success(data["rag_answer"])
-
-# #         # ── If only final_answer (no split) ──────────────────
-# #         if not data.get("sql_answer") and not data.get("rag_answer"):
-# #             if data.get("final_answer"):
-# #                 st.markdown("### 💬 Answer")
-# #                 st.info(data["final_answer"])
-
-# #         st.divider()
-
-# #         # ── Raw Data Table ───────────────────────────────────
-# #         if data.get("rows", 0) > 0:
-# #             st.markdown("### 📋 Raw Data Table")
-# #             try:
-# #                 sql_response = requests.post(
-# #                     f"{API_URL}/sql",
-# #                     json    = {"question": question},
-# #                     timeout = 30
-# #                 ).json()
-
-# #                 if sql_response.get("results"):
-# #                     df = pd.DataFrame(
-# #                         sql_response["results"],
-# #                         columns = sql_response["columns"]
-# #                     )
-# #                     st.dataframe(df, use_container_width=True)
-
-# #             except:
-# #                 st.write("Could not load raw data table.")
-
-# #         # ── RAG Passages ─────────────────────────────────────
-# #         if data.get("passages"):
-# #             with st.expander(
-# #                 f"📚 View Source Passages ({len(data['passages'])} found)"
-# #             ):
-# #                 for i, passage in enumerate(data["passages"], 1):
-# #                     st.markdown(
-# #                         f"**[{i}] {passage['paper_id']}** "
-# #                         f"— relevance: {round(1 - passage['distance'], 2)}"
-# #                     )
-# #                     st.caption(passage["text"][:400] + "...")
-# #                     st.divider()
-
-# #         # ── SQL Query Used ───────────────────────────────────
-# #         if data.get("sql"):
-# #             with st.expander("🔍 View SQL Query"):
-# #                 st.code(data["sql"], language="sql")
-
-# # elif search and not question.strip():
-# #     st.warning("Please enter a question.")
-
-# # """
-# # app.py — Streamlit Frontend (Redesigned)
-# # =========================================
-# # Clean UI with PDF upload on main page.
-# # Only shows information useful to the user.
-# # """
-
-# # import streamlit as st
-# # import requests
-# # import pandas as pd
-
-# # API_URL = "http://localhost:8000"
-
-# # st.set_page_config(
-# #     page_title = "FSAM Research Assistant",
-# #     page_icon  = "🔬",
-# #     layout     = "wide"
-# # )
-
-# # # ── Sidebar — minimal, only useful info ───────────────────────
-# # with st.sidebar:
-# #     st.header("📊 Database")
-
-# #     try:
-# #         stats = requests.get(f"{API_URL}/stats", timeout=5).json()
-# #         col1, col2 = st.columns(2)
-# #         col1.metric("Papers", stats["total_papers"])
-# #         col2.metric("Alloys", stats["total_alloys"])
-# #     except:
-# #         st.error("API not running")
-
-# #     st.divider()
-
-# #     st.subheader("💡 Try These")
-
-# #     st.caption("Data questions:")
-# #     sql_examples = [
-# #         "What is the hardness of AA6061?",
-# #         "Which alloy has the highest UTS?",
-# #         "Compare grain size of AA6061 and AA7075",
-# #     ]
-# #     for ex in sql_examples:
-# #         if st.button(ex, use_container_width=True, key=f"s_{ex}"):
-# #             st.session_state.question = ex
-
-# #     st.caption("Explanation questions:")
-# #     rag_examples = [
-# #         "Why does grain size decrease in AFSD?",
-# #         "How does rotation speed affect microstructure?",
-# #         "Explain recrystallization in FSAM",
-# #     ]
-# #     for ex in rag_examples:
-# #         if st.button(ex, use_container_width=True, key=f"r_{ex}"):
-# #             st.session_state.question = ex
-
-
-# # # ── Main Page ─────────────────────────────────────────────────
-# # st.title("🔬 FSAM Research Assistant")
-# # st.caption("Ask questions about Friction Stir Additive Manufacturing research papers.")
-# # st.divider()
-
-# # # ── Two Column Layout: Upload + Search ────────────────────────
-# # left, right = st.columns([1, 2])
-
-# # # ── LEFT: PDF Upload ──────────────────────────────────────────
-# # with left:
-# #     st.subheader("📄 Upload Paper")
-# #     st.caption("Add your own PDF to search alongside the database.")
-
-# #     uploaded_file = st.file_uploader(
-# #         "Choose PDF",
-# #         type             = ["pdf"],
-# #         label_visibility = "collapsed"
-# #     )
-
-# #     if uploaded_file:
-# #         if st.button("Add to Search", use_container_width=True, type="primary"):
-# #             with st.spinner("Processing..."):
-# #                 try:
-# #                     response = requests.post(
-# #                         f"{API_URL}/upload",
-# #                         files   = {"file": (
-# #                             uploaded_file.name,
-# #                             uploaded_file.getvalue(),
-# #                             "application/pdf"
-# #                         )},
-# #                         timeout = 60
-# #                     )
-# #                     result = response.json()
-
-# #                     if response.status_code == 200:
-# #                         st.success(f"✅ {result['chunks_added']} sections added")
-# #                         st.session_state.search_user    = True
-# #                         st.session_state.uploaded_paper = uploaded_file.name
-# #                     else:
-# #                         st.error("Upload failed")
-
-# #                 except Exception as e:
-# #                     st.error(f"Error: {str(e)}")
-
-# #     # Show active uploaded paper
-# #     if st.session_state.get("search_user"):
-# #         name         = st.session_state.get("uploaded_paper", "")
-# #         display_name = name[:30] + "..." if len(name) > 30 else name
-# #         st.info(f"📄 Active: {display_name}")
-# #         if st.button("Remove", use_container_width=True):
-# #             st.session_state.search_user    = False
-# #             st.session_state.uploaded_paper = None
-# #             st.rerun()
-
-
-# # # ── RIGHT: Question Input ─────────────────────────────────────
-# # with right:
-# #     st.subheader("💬 Ask a Question")
-
-# #     default  = st.session_state.get("question", "")
-# #     question = st.text_input(
-# #         "Question",
-# #         value            = default,
-# #         placeholder      = "e.g. What is the hardness of AA6061?",
-# #         label_visibility = "collapsed"
-# #     )
-
-# #     search = st.button(
-# #         "🔍 Search",
-# #         use_container_width = True,
-# #         type                = "primary"
-# #     )
-
-
-# # st.divider()
-
-# # # ── Results ────────────────────────────────────────────────────
-# # if search and question.strip():
-
-# #     with st.spinner("Searching..."):
-# #         try:
-# #             response = requests.post(
-# #                 f"{API_URL}/ask",
-# #                 json    = {
-# #                     "question":    question,
-# #                     "search_user": st.session_state.get("search_user", False)
-# #                 },
-# #                 timeout = 60
-# #             )
-# #             data = response.json()
-
-# #         except requests.exceptions.ConnectionError:
-# #             st.error("Cannot connect to API. Is the FastAPI server running?")
-# #             st.stop()
-# #         except Exception as e:
-# #             st.error(f"Error: {str(e)}")
-# #             st.stop()
-
-# #     # ── Route Badge ───────────────────────────────────────────
-# #     route = data.get("route", "")
-# #     route_labels = {
-# #         "sql":  "📊 Database search",
-# #         "rag":  "📖 Research paper search",
-# #         "both": "🔀 Database + Research papers"
-# #     }
-# #     st.caption(route_labels.get(route, ""))
-
-# #     # ── Answers ───────────────────────────────────────────────
-# #     if data.get("sql_answer"):
-# #         st.markdown("### 📊 Data")
-# #         st.info(data["sql_answer"])
-
-# #     if data.get("rag_answer"):
-# #         st.markdown("### 📖 Explanation")
-# #         st.success(data["rag_answer"])
-
-# #     if not data.get("sql_answer") and not data.get("rag_answer"):
-# #         if data.get("final_answer"):
-# #             st.info(data["final_answer"])
-
-# #     # ── Raw Data Table ────────────────────────────────────────
-# #     if data.get("rows", 0) > 0:
-# #         st.markdown("### 📋 Raw Data")
-# #         try:
-# #             sql_resp = requests.post(
-# #                 f"{API_URL}/sql",
-# #                 json    = {"question": question},
-# #                 timeout = 30
-# #             ).json()
-
-# #             if sql_resp.get("results"):
-# #                 df = pd.DataFrame(
-# #                     sql_resp["results"],
-# #                     columns = sql_resp["columns"]
-# #                 )
-# #                 st.dataframe(df, use_container_width=True)
-# #         except:
-# #             pass
-
-# #     # ── Source Passages ───────────────────────────────────────
-# #     if data.get("passages"):
-# #         with st.expander(f"📚 Sources ({len(data['passages'])} passages)"):
-# #             for i, p in enumerate(data["passages"], 1):
-# #                 source = p.get("source", "fsam")
-# #                 if source == "user":
-# #                     label = "📄 Your uploaded paper"
-# #                 else:
-# #                     label = f"🗄 {p['paper_id']}"
-
-# #                 relevance = round(1 - p["distance"], 2)
-# #                 st.markdown(f"**[{i}] {label}** — relevance: {relevance}")
-# #                 st.caption(p["text"][:300] + "...")
-# #                 if i < len(data["passages"]):
-# #                     st.divider()
-
-# #     # ── SQL Query ─────────────────────────────────────────────
-# #     if data.get("sql"):
-# #         with st.expander("🔍 SQL Query"):
-# #             st.code(data["sql"], language="sql")
-
-# # elif search and not question.strip():
-# #     st.warning("Please enter a question.")
-
-# """
-# app.py — Streamlit Frontend (Clean Redesign)
-# =============================================
-# Clean research-grade UI.
-# Search scope selector only appears after PDF upload.
-# """
-
-# import streamlit as st
-# import requests
-# import pandas as pd
-
-# API_URL = "http://localhost:8000"
-
-# st.set_page_config(
-#     page_title = "FSAM Research Assistant",
-#     page_icon  = "🔬",
-#     layout     = "wide"
-# )
-
-# # ── Custom CSS ────────────────────────────────────────────────
-# st.markdown("""
-# <style>
-#     /* Import clean research font */
-#     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-#     /* Global font */
-#     html, body, [class*="css"] {
-#         font-family: 'IBM Plex Sans', sans-serif;
-#     }
-
-#     /* Hide Streamlit default header */
-#     #MainMenu {visibility: hidden;}
-#     footer {visibility: hidden;}
-
-#     /* Main container */
-#     .block-container {
-#         padding-top: 2rem;
-#         padding-bottom: 2rem;
-#     }
-
-#     /* Title styling */
-#     h1 {
-#         font-size: 2rem !important;
-#         font-weight: 600 !important;
-#         letter-spacing: -0.5px;
-#         color: #F0F4F8 !important;
-#     }
-
-#     /* Section headers */
-#     h3 {
-#         font-size: 1rem !important;
-#         font-weight: 500 !important;
-#         text-transform: uppercase;
-#         letter-spacing: 1px;
-#         color: #94A3B8 !important;
-#         margin-top: 1.5rem !important;
-#     }
-
-#     /* Answer boxes */
-#     .stAlert {
-#         border-radius: 8px;
-#         border-left: 3px solid;
-#     }
-
-#     /* Metric labels */
-#     [data-testid="stMetricLabel"] {
-#         font-size: 0.7rem !important;
-#         text-transform: uppercase;
-#         letter-spacing: 1px;
-#         color: #64748B !important;
-#     }
-
-#     /* Metric values */
-#     [data-testid="stMetricValue"] {
-#         font-size: 1.8rem !important;
-#         font-weight: 600 !important;
-#     }
-
-#     /* Buttons */
-#     .stButton > button {
-#         border-radius: 6px;
-#         font-family: 'IBM Plex Sans', sans-serif;
-#         font-weight: 500;
-#         letter-spacing: 0.3px;
-#         transition: all 0.15s ease;
-#     }
-
-#     /* Search button */
-#     .stButton > button[kind="primary"] {
-#         background: #2563EB;
-#         border: none;
-#         font-size: 0.95rem;
-#     }
-
-#     .stButton > button[kind="primary"]:hover {
-#         background: #1D4ED8;
-#         transform: translateY(-1px);
-#         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-#     }
-
-#     /* Text input */
-#     .stTextInput > div > div > input {
-#         font-family: 'IBM Plex Sans', sans-serif;
-#         font-size: 1rem;
-#         border-radius: 6px;
-#         padding: 0.6rem 1rem;
-#     }
-
-#     /* Sidebar */
-#     [data-testid="stSidebar"] {
-#         border-right: 1px solid #1E293B;
-#     }
-
-#     /* Code blocks */
-#     code {
-#         font-family: 'IBM Plex Mono', monospace !important;
-#     }
-
-#     /* Divider */
-#     hr {
-#         border-color: #1E293B;
-#         margin: 1.5rem 0;
-#     }
-
-#     /* File uploader */
-#     [data-testid="stFileUploader"] {
-#         border-radius: 8px;
-#     }
-
-#     /* Expander */
-#     .streamlit-expanderHeader {
-#         font-size: 0.85rem !important;
-#         font-weight: 500 !important;
-#         color: #94A3B8 !important;
-#     }
-
-#     /* Radio buttons */
-#     .stRadio > div {
-#         gap: 0.5rem;
-#     }
-
-#     /* Caption */
-#     .stCaption {
-#         color: #64748B !important;
-#         font-size: 0.8rem !important;
-#     }
-
-#     /* Upload area card */
-#     .upload-card {
-#         background: #0F172A;
-#         border: 1px solid #1E293B;
-#         border-radius: 10px;
-#         padding: 1.5rem;
-#     }
-
-#     /* Active paper badge */
-#     .paper-badge {
-#         background: #052E16;
-#         border: 1px solid #166534;
-#         border-radius: 6px;
-#         padding: 0.5rem 0.75rem;
-#         font-size: 0.8rem;
-#         color: #86EFAC;
-#         margin-top: 0.5rem;
-#     }
-# </style>
-# """, unsafe_allow_html=True)
-
-
-# # ── Sidebar ───────────────────────────────────────────────────
-# with st.sidebar:
-#     st.markdown("### Database")
-
-#     try:
-#         stats = requests.get(f"{API_URL}/stats", timeout=5).json()
-#         c1, c2 = st.columns(2)
-#         c1.metric("Papers", stats["total_papers"])
-#         c2.metric("Alloys", stats["total_alloys"])
-#     except:
-#         st.error("⚠ API offline")
-
-#     st.divider()
-
-#     st.markdown("### Try These")
-
-#     st.caption("DATA QUESTIONS")
-#     sql_examples = [
-#         "What is the hardness of AA6061?",
-#         "Which alloy has highest UTS?",
-#         "Compare AA6061 and AA7075 grain size",
-#         "Papers with rotation speed > 1000 rpm",
-#     ]
-#     for ex in sql_examples:
-#         if st.button(ex, use_container_width=True, key=f"s_{ex}"):
-#             st.session_state.question = ex
-
-#     st.caption("EXPLANATION QUESTIONS")
-#     rag_examples = [
-#         "Why does grain size decrease in AFSD?",
-#         "How does rotation speed affect microstructure?",
-#         "Explain recrystallization in FSAM",
-#         "What causes hardness variation in AA7075?",
-#     ]
-#     for ex in rag_examples:
-#         if st.button(ex, use_container_width=True, key=f"r_{ex}"):
-#             st.session_state.question = ex
-# st.divider()
-# st.markdown("### 📋 Upload History")
-
-# try:
-#     hist_data = requests.get(f"{API_URL}/history", timeout=5).json()
-#     history   = hist_data.get("history", [])
-
-#     if not history:
-#         st.caption("No papers uploaded yet.")
-#     else:
-#         for record in history:
-#             col1, col2 = st.columns([3, 1])
-#             with col1:
-#                 # Truncate long filenames
-#                 name = record["filename"]
-#                 display = name[:25] + "..." if len(name) > 25 else name
-#                 st.markdown(f"**{display}**")
-#                 st.caption(
-#                     f"{record['uploaded_at']} · "
-#                     f"{record['chunks_added']} sections · "
-#                     f"{record['file_size_mb']} MB"
-#                 )
-#             with col2:
-#                 if st.button("🗑", key=f"del_{record['id']}",
-#                              help="Remove from history"):
-#                     requests.delete(
-#                         f"{API_URL}/history/{record['id']}",
-#                         timeout=5
-#                     )
-#                     st.rerun()
-# except:
-#     st.caption("Could not load history.")
-
-
-# # ── Main Page ─────────────────────────────────────────────────
-# st.title("🔬 FSAM Research Assistant")
-# st.caption("Natural language search across Friction Stir Additive Manufacturing research papers.")
-# st.divider()
-
-# # ── TOP SECTION: Upload + Question ────────────────────────────
-# upload_col, question_col = st.columns([1, 2], gap="large")
-
-
-# # ── UPLOAD COLUMN ─────────────────────────────────────────────
-# with upload_col:
-#     st.markdown("### Upload Paper")
-#     st.caption("Add a PDF to search alongside the built-in database.")
-
-#     uploaded_file = st.file_uploader(
-#         "PDF only",
-#         type             = ["pdf"],
-#         label_visibility = "collapsed"
-#     )
-
-#     if uploaded_file:
-#         # Show file info
-#         size_mb = len(uploaded_file.getvalue()) / 1_000_000
-#         st.caption(f"📎 {uploaded_file.name[:35]}{'...' if len(uploaded_file.name) > 35 else ''} · {size_mb:.1f} MB")
-
-#         if st.button("⊕ Add to Search Index",
-#                      use_container_width=True,
-#                      type="primary"):
-#             with st.spinner("Processing PDF..."):
-#                 try:
-#                     resp = requests.post(
-#                         f"{API_URL}/upload",
-#                         files   = {"file": (
-#                             uploaded_file.name,
-#                             uploaded_file.getvalue(),
-#                             "application/pdf"
-#                         )},
-#                         timeout = 120
-#                     )
-#                     result = resp.json()
-
-#                     if resp.status_code == 200:
-#                         st.success(
-#                             f"✓ {result['chunks_added']} sections indexed"
-#                         )
-#                         st.session_state.search_user    = True
-#                         st.session_state.uploaded_paper = uploaded_file.name
-#                         st.rerun()
-#                     else:
-#                         st.error(f"Failed: {result.get('detail', 'unknown error')}")
-
-#                 except Exception as e:
-#                     st.error(f"Error: {e}")
-
-#     # Show active paper badge + remove
-#     if st.session_state.get("search_user"):
-#         name = st.session_state.get("uploaded_paper", "")
-#         st.markdown(
-#             f'<div class="paper-badge">📄 '
-#             f'{name[:28] + "..." if len(name) > 28 else name}'
-#             f' · Active</div>',
-#             unsafe_allow_html=True
-#         )
-#         st.write("")
-#         if st.button("✕ Remove paper", use_container_width=True):
-#             st.session_state.search_user    = False
-#             st.session_state.uploaded_paper = None
-#             st.rerun()
-
-
-# # ── QUESTION COLUMN ────────────────────────────────────────────
-# with question_col:
-#     st.markdown("### Ask a Question")
-
-#     default  = st.session_state.get("question", "")
-#     question = st.text_input(
-#         "question_input",
-#         value            = default,
-#         placeholder      = "What is the hardness of AA6061?  ·  Why does grain size decrease in AFSD?",
-#         label_visibility = "collapsed"
-#     )
-
-#     # ── Search Scope — ONLY shows after upload ────────────────
-#     search_user  = False
-#     search_scope = "database"
-
-#     if st.session_state.get("search_user"):
-#         st.caption("SEARCH IN")
-#         scope = st.radio(
-#             "scope",
-#             options          = [
-#                 "Database only",
-#                 "Uploaded paper only",
-#                 "Both database + uploaded paper"
-#             ],
-#             index            = 2,       # default: both
-#             label_visibility = "collapsed",
-#             horizontal       = False
-#         )
-
-#         if scope == "Uploaded paper only":
-#             search_scope = "user_only"
-#             search_user  = True
-#         elif scope == "Both database + uploaded paper":
-#             search_scope = "both"
-#             search_user  = True
-#         else:
-#             search_scope = "database"
-#             search_user  = False
-
-#     search = st.button(
-#         "Search →",
-#         use_container_width = True,
-#         type                = "primary"
-#     )
-
-
-# st.divider()
-
-
-# # ── RESULTS ────────────────────────────────────────────────────
-# if search and question.strip():
-
-#     with st.spinner(""):
-#         try:
-#             # Build request based on scope
-#             if search_scope == "user_only":
-#                 # Search only uploaded paper
-#                 # We use /ask with search_user=True
-#                 # and pass a flag in question to indicate user_only
-#                 resp = requests.post(
-#                     f"{API_URL}/ask",
-#                     json    = {
-#                         "question":    question,
-#                         "search_user": True
-#                     },
-#                     timeout = 90
-#                 )
-#             else:
-#                 resp = requests.post(
-#                     f"{API_URL}/ask",
-#                     json    = {
-#                         "question":    question,
-#                         "search_user": search_user
-#                     },
-#                     timeout = 90
-#                 )
-
-#             data = resp.json()
-
-#         except requests.exceptions.ConnectionError:
-#             st.error("Cannot connect to API. Make sure FastAPI is running on port 8000.")
-#             st.stop()
-#         except Exception as e:
-#             st.error(f"Error: {e}")
-#             st.stop()
-
-#     # ── Route label ──────────────────────────────────────────
-#     route = data.get("route", "")
-#     route_map = {
-#         "sql":  "📊  Database search",
-#         "rag":  "📖  Research paper search",
-#         "both": "🔀  Database + Research papers"
-#     }
-#     if route in route_map:
-#         st.caption(route_map[route])
-
-#     # ── Data Answer ───────────────────────────────────────────
-#     if data.get("sql_answer"):
-#         st.markdown("### 📊 Data")
-#         st.info(data["sql_answer"])
-
-#     # ── Explanation Answer ────────────────────────────────────
-#     if data.get("rag_answer"):
-#         st.markdown("### 📖 Explanation")
-#         st.success(data["rag_answer"])
-
-#     # ── Fallback ──────────────────────────────────────────────
-#     if not data.get("sql_answer") and not data.get("rag_answer"):
-#         if data.get("final_answer"):
-#             st.info(data["final_answer"])
-
-#     # ── Raw Data Table ────────────────────────────────────────
-#     if data.get("rows", 0) > 0:
-#         st.markdown("### 📋 Raw Data")
-#         try:
-#             sql_resp = requests.post(
-#                 f"{API_URL}/sql",
-#                 json    = {"question": question},
-#                 timeout = 30
-#             ).json()
-
-#             if sql_resp.get("results"):
-#                 df = pd.DataFrame(
-#                     sql_resp["results"],
-#                     columns = sql_resp["columns"]
-#                 )
-#                 st.dataframe(df, use_container_width=True)
-#         except:
-#             pass
-
-#     # ── Source Passages ───────────────────────────────────────
-#     if data.get("passages"):
-#         with st.expander(
-#             f"View sources  ·  {len(data['passages'])} passages found"
-#         ):
-#             for i, p in enumerate(data["passages"], 1):
-#                 source    = p.get("source", "fsam")
-#                 relevance = round(1 - p["distance"], 2)
-
-#                 if source == "user":
-#                     label      = "📄 Your paper"
-#                     badge_color = "#052E16"
-#                     text_color  = "#86EFAC"
-#                 else:
-#                     label      = f"🗄 {p['paper_id']}"
-#                     badge_color = "#0F172A"
-#                     text_color  = "#94A3B8"
-
-#                 st.markdown(
-#                     f'<span style="background:{badge_color};color:{text_color};'
-#                     f'padding:2px 8px;border-radius:4px;font-size:0.8rem;">'
-#                     f'{label}</span>'
-#                     f' &nbsp; relevance: **{relevance}**',
-#                     unsafe_allow_html=True
-#                 )
-#                 st.caption(p["text"][:350] + "...")
-
-#                 if i < len(data["passages"]):
-#                     st.divider()
-
-#     # ── SQL Used ──────────────────────────────────────────────
-#     if data.get("sql"):
-#         with st.expander("SQL query used"):
-#             st.code(data["sql"], language="sql")
-
-# elif search and not question.strip():
-#     st.warning("Please enter a question.")
-
 """
-app.py — Streamlit Frontend
-============================
+app.py — Streamlit Frontend (Redesigned)
+=========================================
 Clean UI with:
-- PDF upload on main page
-- Dropdown to select which uploaded paper to search
-- Upload history in sidebar
-- Clean sidebar layout
+- Upload paper → auto activates (no dropdown needed)
+- Two buttons: Search This Paper / Search Database
+- Green badge showing active paper
+- Clear paper button
+- Token limit error detection
 """
 
 import streamlit as st
@@ -1000,16 +26,11 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-    html, body, [class*="css"] {
-        font-family: 'IBM Plex Sans', sans-serif;
-    }
+    html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; }
 
     #MainMenu {visibility: hidden;}
     footer     {visibility: hidden;}
-
-    .block-container {
-        padding-top: 1.5rem;
-    }
+    .block-container { padding-top: 1.5rem; }
 
     h1 {
         font-size: 1.8rem !important;
@@ -1017,22 +38,8 @@ st.markdown("""
         letter-spacing: -0.5px;
     }
 
-    /* Sidebar clean styling */
-    [data-testid="stSidebar"] {
-        border-right: 1px solid #1E293B;
-    }
+    [data-testid="stSidebar"] { border-right: 1px solid #1E293B; }
 
-    [data-testid="stSidebar"] h3 {
-        font-size: 0.75rem !important;
-        font-weight: 600 !important;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: #64748B !important;
-        margin-bottom: 0.5rem !important;
-        margin-top: 1rem !important;
-    }
-
-    /* Metric cards in sidebar */
     [data-testid="stMetricValue"] {
         font-size: 1.6rem !important;
         font-weight: 600 !important;
@@ -1045,7 +52,6 @@ st.markdown("""
         color: #64748B !important;
     }
 
-    /* Sidebar buttons — example questions */
     section[data-testid="stSidebar"] .stButton > button {
         background: transparent;
         border: 1px solid #1E293B;
@@ -1063,7 +69,6 @@ st.markdown("""
         border-color: #334155;
     }
 
-    /* Main search button */
     .stButton > button[kind="primary"] {
         background: #2563EB;
         border: none;
@@ -1078,10 +83,19 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(37,99,235,0.3);
     }
 
-    /* Divider */
     hr { border-color: #1E293B; margin: 0.75rem 0; }
 
-    /* History item */
+    .paper-badge {
+        background: #052E16;
+        border: 1px solid #166534;
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.82rem;
+        color: #86EFAC;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
     .history-item {
         background: #0F172A;
         border: 1px solid #1E293B;
@@ -1094,9 +108,6 @@ st.markdown("""
         font-size: 0.8rem;
         font-weight: 500;
         color: #E2E8F0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .history-meta {
@@ -1105,23 +116,42 @@ st.markdown("""
         margin-top: 2px;
     }
 
-    /* Caption */
     .stCaption { color: #64748B !important; font-size: 0.75rem !important; }
-
     code { font-family: 'IBM Plex Mono', monospace !important; }
-
     .stAlert { border-radius: 8px; }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ── Helper: load history from API ─────────────────────────────
+# ── Helpers ───────────────────────────────────────────────────
 def load_history():
     try:
         resp = requests.get(f"{API_URL}/history", timeout=5)
         return resp.json().get("history", [])
     except:
         return []
+
+
+def is_token_limit_error(text: str) -> bool:
+    phrases = [
+        "rate limit", "rate_limit", "token",
+        "quota", "exceeded", "429",
+        "too many requests", "limit reached",
+        "tokens per day", "tokens per minute"
+    ]
+    return any(p in str(text).lower() for p in phrases)
+
+
+def show_token_error():
+    st.error(
+        "⚠️ **Daily Token Limit Reached**\n\n"
+        "The Groq API free tier allows 100,000 tokens per day. "
+        "This limit has been reached for today.\n\n"
+        "**What you can do:**\n"
+        "- Wait until midnight UTC for the limit to reset\n"
+        "- Upgrade to Groq Dev tier (~$3/month)\n"
+        "- Ask shorter or simpler questions to use fewer tokens"
+    )
 
 
 # ── SIDEBAR ───────────────────────────────────────────────────
@@ -1134,6 +164,7 @@ with st.sidebar:
         c1, c2 = st.columns(2)
         c1.metric("Papers", stats["total_papers"])
         c2.metric("Alloys", stats["total_alloys"])
+        st.caption("✅ API Online")
     except:
         st.error("⚠ API offline")
 
@@ -1141,7 +172,6 @@ with st.sidebar:
 
     # ── Upload History ───────────────────────────────────────
     st.markdown("### Upload History")
-
     history = load_history()
 
     if not history:
@@ -1171,6 +201,11 @@ with st.sidebar:
                         f"{API_URL}/history/{record['id']}",
                         timeout=5
                     )
+                    if (st.session_state.get("active_paper_id") ==
+                            record.get("paper_id")):
+                        st.session_state.paper_uploaded    = False
+                        st.session_state.active_paper_id   = None
+                        st.session_state.active_paper_name = None
                     st.rerun()
 
     st.divider()
@@ -1220,10 +255,10 @@ with upload_col:
     )
 
     if uploaded_file:
-        size_mb     = len(uploaded_file.getvalue()) / 1_000_000
-        short_name  = (uploaded_file.name[:30] + "..."
-                       if len(uploaded_file.name) > 30
-                       else uploaded_file.name)
+        size_mb    = len(uploaded_file.getvalue()) / 1_000_000
+        short_name = (uploaded_file.name[:30] + "..."
+                      if len(uploaded_file.name) > 30
+                      else uploaded_file.name)
         st.caption(f"📎 {short_name} · {size_mb:.1f} MB")
 
         if st.button("⊕ Add to Search",
@@ -1243,6 +278,10 @@ with upload_col:
                     result = resp.json()
 
                     if resp.status_code == 200:
+                        # Auto activate uploaded paper
+                        st.session_state.paper_uploaded    = True
+                        st.session_state.active_paper_id   = result.get("paper_id")
+                        st.session_state.active_paper_name = uploaded_file.name
                         st.success(
                             f"✓ {result['chunks_added']} sections indexed"
                         )
@@ -1253,55 +292,23 @@ with upload_col:
                 except Exception as e:
                     st.error(f"Error: {e}")
 
-    # ── Paper Selector (only if history exists) ───────────────
-    history = load_history()
-
-    if history:
-        st.caption("SEARCH IN UPLOADED PAPER")
-
-        # Build dropdown options
-        # First option = none (search database only)
-        paper_options = ["— Database only —"] + [
-            r["filename"] for r in history
-        ]
-
-        selected_paper = st.selectbox(
-            "Select paper",
-            options          = paper_options,
-            label_visibility = "collapsed",
-            key              = "paper_selector"
+    # ── Active Paper Green Badge ───────────────────────────
+    if st.session_state.get("paper_uploaded"):
+        name    = st.session_state.get("active_paper_name", "")
+        display = name[:38] + "..." if len(name) > 38 else name
+        st.markdown(
+            f'<div class="paper-badge">'
+            f'📄 <strong>Active paper:</strong><br>{display}'
+            f'</div>',
+            unsafe_allow_html=True
         )
 
-        # Store selection in session state
-        if selected_paper == "— Database only —":
-            st.session_state.search_user    = False
-            st.session_state.uploaded_paper = None
-            st.session_state.active_paper_id = None
-        else:
-            # Find matching history record
-            match = next(
-                (r for r in history if r["filename"] == selected_paper),
-                None
-            )
-            if match:
-                st.session_state.search_user     = True
-                st.session_state.uploaded_paper  = match["filename"]
-                st.session_state.active_paper_id = match["paper_id"]
-
-        # Show search scope radio only when a paper is selected
-        if st.session_state.get("search_user"):
-            st.caption("SEARCH SCOPE")
-            scope = st.radio(
-                "scope",
-                options          = [
-                    "Database + uploaded paper",
-                    "Uploaded paper only",
-                    "Database only",
-                ],
-                index            = 0,
-                label_visibility = "collapsed"
-            )
-            st.session_state.search_scope = scope
+        if st.button("✕ Remove paper",
+                     use_container_width=True):
+            st.session_state.paper_uploaded    = False
+            st.session_state.active_paper_id   = None
+            st.session_state.active_paper_name = None
+            st.rerun()
 
 
 # ── QUESTION COLUMN ────────────────────────────────────────────
@@ -1316,61 +323,116 @@ with question_col:
         label_visibility = "collapsed"
     )
 
-    search = st.button(
-        "Search →",
-        use_container_width = True,
-        type                = "primary"
-    )
+    paper_active = st.session_state.get("paper_uploaded", False)
+
+    if paper_active:
+        # Show which paper is active
+        name = st.session_state.get("active_paper_name", "")
+        short = name[:45] + "..." if len(name) > 45 else name
+        st.caption(f"📄 Active: **{short}**")
+
+        # Two buttons side by side
+        btn_col1, btn_col2 = st.columns(2)
+        with btn_col1:
+            search_paper = st.button(
+                "📄 Search This Paper",
+                use_container_width = True,
+                type                = "primary",
+                key                 = "btn_paper"
+            )
+        with btn_col2:
+            search_db = st.button(
+                "🗄 Search Database",
+                use_container_width = True,
+                key                 = "btn_db"
+            )
+    else:
+        # No paper — single database button
+        search_paper = False
+        search_db    = st.button(
+            "🔍 Search Database",
+            use_container_width = True,
+            type                = "primary",
+            key                 = "btn_db_only"
+        )
 
 
 st.divider()
 
 
 # ── RESULTS ────────────────────────────────────────────────────
-if search and question.strip():
+search_triggered = search_paper or search_db
 
-    # Determine search parameters from session state
-    scope        = st.session_state.get("search_scope", "Database only")
-    search_user  = st.session_state.get("search_user", False)
+if search_triggered and question.strip():
 
-    if scope == "Database only":
-        search_user = False
-    elif scope == "Uploaded paper only":
-        search_user = True
-        # Prepend "in the paper" to trigger uploaded paper detection
-        if not any(t in question.lower() for t in
-                   ["the paper", "this paper", "uploaded", "this study"]):
-            question = question + " in the uploaded paper"
+    # Build payload based on which button was clicked
+    if search_paper:
+        payload      = {
+            "question":      question,
+            "search_user":   True,
+            "search_fsam":   False,
+            "user_paper_id": st.session_state.get("active_paper_id")
+        }
+        search_label = "📄 Searching uploaded paper..."
     else:
-        search_user = True
+        payload      = {
+            "question":    question,
+            "search_user": False,
+            "search_fsam": True,
+        }
+        search_label = "🗄 Searching database..."
 
-    with st.spinner("Searching..."):
+    with st.spinner(search_label):
         try:
             resp = requests.post(
                 f"{API_URL}/ask",
-                json    = {
-                    "question":    question,
-                    "search_user": search_user
-                },
+                json    = payload,
                 timeout = 90
             )
+
+            # Token limit check on HTTP level
+            if resp.status_code == 429 or is_token_limit_error(resp.text):
+                show_token_error()
+                st.stop()
+
             data = resp.json()
 
+            # Token limit check inside response body
+            if is_token_limit_error(str(data.get("final_answer", ""))) or \
+               is_token_limit_error(str(data.get("rag_answer", ""))) or \
+               is_token_limit_error(str(data.get("error", ""))):
+                show_token_error()
+                st.stop()
+
         except requests.exceptions.ConnectionError:
-            st.error("Cannot connect to API. Is FastAPI running on port 8000?")
+            st.error(
+                "Cannot connect to API. "
+                "Is FastAPI running on port 8000?"
+            )
             st.stop()
         except Exception as e:
-            st.error(f"Error: {e}")
+            if is_token_limit_error(str(e)):
+                show_token_error()
+            else:
+                st.error(f"Error: {e}")
             st.stop()
 
+    # ── Source badge ─────────────────────────────────────────
+    if search_paper:
+        name = st.session_state.get("active_paper_name", "uploaded paper")
+        st.caption(f"Results from: 📄 {name}")
+    else:
+        st.caption("Results from: 🗄 FSAM Research Database (57 papers)")
+
     # ── Route label ──────────────────────────────────────────
-    route = data.get("route", "")
+    route     = data.get("route", "")
     route_map = {
         "sql":  "📊 Database search",
         "rag":  "📖 Research paper search",
         "both": "🔀 Database + Research papers"
     }
-    st.caption(route_map.get(route, ""))
+    if route in route_map:
+        st.caption(route_map[route])
 
     # ── SQL Answer ────────────────────────────────────────────
     if data.get("sql_answer"):
@@ -1386,6 +448,10 @@ if search and question.strip():
     if not data.get("sql_answer") and not data.get("rag_answer"):
         if data.get("final_answer"):
             st.info(data["final_answer"])
+
+    # ── General error ─────────────────────────────────────────
+    if data.get("error") and not data.get("final_answer"):
+        st.error(f"Error: {data['error']}")
 
     # ── Raw Data Table ────────────────────────────────────────
     if data.get("rows", 0) > 0:
@@ -1434,8 +500,8 @@ if search and question.strip():
 
     # ── SQL Query ─────────────────────────────────────────────
     if data.get("sql"):
-        with st.expander("🔍 SQL query"):
+        with st.expander("🔍 SQL query used"):
             st.code(data["sql"], language="sql")
 
-elif search and not question.strip():
+elif search_triggered and not question.strip():
     st.warning("Please enter a question.")

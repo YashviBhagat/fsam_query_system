@@ -20,6 +20,8 @@ Output: (fsam_collection, user_collection)
 """
 
 import os
+
+os.environ["ANONYMIZED_TELEMETRY"] = "False"
 import chromadb
 # chromadb = vector database
 # PersistentClient = saves to disk, survives restarts

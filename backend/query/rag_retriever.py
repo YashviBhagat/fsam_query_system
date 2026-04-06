@@ -28,32 +28,47 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(
                 os.path.dirname(__file__))))
 
+from sentence_transformers import SentenceTransformer
 from backend.database.chroma_client import get_collections
-# get_collections() → (fsam_collection, user_collection)
+
+# ── Embedding model ───────────────────────────────────────────
+# CRITICAL: Must use SAME model for both indexing and querying
+# Your fsam_papers collection was indexed with BAAI/bge-large-en-v1.5
+# Your user_papers collection is now also indexed with same model
+# Using a different model causes dimension mismatch errors
+print("Loading BAAI/bge-large-en-v1.5 embedding model...")
+EMBEDDING_MODEL = SentenceTransformer("BAAI/bge-large-en-v1.5")
+print("✅ Embedding model loaded")
 
 # How many results to return per search
-# 5 = enough context without overwhelming Groq
 N_RESULTS = 5
 
 
 def search_chunks(question: str,
                   search_fsam: bool = True,
-                  search_user: bool = True) -> list[dict]:
+                  search_user: bool = True,
+                  user_paper_id: str = None) -> list[dict]:
     """
     Searches ChromaDB for chunks relevant to the question.
 
-    HOW collection.query() WORKS:
-    ───────────────────────────────
-    1. Takes question text
-    2. Converts to vector using embedding function
-    3. Finds N_RESULTS vectors closest to question vector
-    4. Returns original text + metadata of those chunks
+    HOW IT WORKS:
+    ─────────────
+    1. Embed the question using BAAI model → 1024-dim vector
+    2. Search fsam_papers collection (if search_fsam=True)
+    3. Search user_papers collection (if search_user=True)
+       - If user_paper_id provided → filter to THAT paper only
+       - If user_paper_id is None  → search ALL user papers
+    4. Combine, sort by distance, filter poor matches
+    5. Return top N_RESULTS passages
 
     PARAMETERS:
     ────────────
-    search_fsam = True  → search your 57 pre-loaded papers
-    search_user = True  → search user uploaded papers
-    Both = True         → search everything (default)
+    question      = user's natural language question
+    search_fsam   = True → search your 57 pre-loaded papers
+    search_user   = True → search user uploaded papers
+    user_paper_id = "1_s2_0_S026412752200418X_main"
+                  → filter user search to this paper only
+                  → None = search all user papers
 
     DISTANCE SCORE:
     ────────────────
@@ -61,59 +76,88 @@ def search_chunks(question: str,
     Lower distance = more similar = better match.
 
     distance = 0.0  → perfect match (identical text)
-    distance = 0.5  → very similar meaning
-    distance = 1.0  → somewhat related
-    distance = 2.0  → not related
+    distance = 0.3  → very similar meaning (excellent)
+    distance = 0.5  → similar meaning (good)
+    distance = 0.8  → somewhat related (weak)
+    distance > 1.0  → not related → filtered out
 
-    We filter out results with distance > 1.0
-    to avoid returning irrelevant passages.
+    WHY WE EMBED MANUALLY:
+    ───────────────────────
+    We pass query_embeddings instead of query_texts
+    because both collections use BAAI/bge-large-en-v1.5 (1024-dim)
+    but ChromaDB's default model is all-MiniLM-L6-v2 (384-dim).
+    Passing embeddings directly bypasses ChromaDB's model entirely.
     """
 
     fsam_col, user_col = get_collections()
 
     all_results = []
 
-    # Search fsam_papers collection
+    # ── Embed the question manually with BAAI model ──────────
+    # This produces a 1024-dimensional vector
+    # MUST match the dimensions stored in both collections
+    question_embedding = EMBEDDING_MODEL.encode(
+        [question]
+    ).tolist()
+    # .tolist() converts numpy array → Python list
+    # ChromaDB requires Python list, not numpy array
+
+    # ── Search fsam_papers collection ───────────────────────
     if search_fsam and fsam_col.count() > 0:
-        fsam_results = fsam_col.query(
-            query_texts = [question],
-            # query_texts must be a list even for one question
-            # ChromaDB converts this to a vector and searches
+        try:
+            fsam_results = fsam_col.query(
+                query_embeddings = question_embedding,
+                # Pass pre-computed embedding, not raw text
+                # Bypasses ChromaDB's default 384-dim model
 
-            n_results   = N_RESULTS,
-            # Return top N_RESULTS most similar chunks
+                n_results        = N_RESULTS,
+                include          = ["documents", "metadatas", "distances"]
+            )
+            all_results.extend(
+                parse_query_results(fsam_results, source="fsam")
+            )
+        except Exception as e:
+            print(f"⚠️  fsam_papers search error: {e}")
 
-            include     = ["documents", "metadatas", "distances"]
-            # documents = original text of each chunk
-            # metadatas = paper_id, chunk_index etc.
-            # distances = similarity score (lower = better)
-        )
-        all_results.extend(
-            parse_query_results(fsam_results, source="fsam")
-        )
-
-    # Search user_papers collection
+    # ── Search user_papers collection ───────────────────────
     if search_user and user_col.count() > 0:
-        user_results = user_col.query(
-            query_texts = [question],
-            n_results   = N_RESULTS,
-            include     = ["documents", "metadatas", "distances"]
-        )
-        all_results.extend(
-            parse_query_results(user_results, source="user")
-        )
+        try:
+            if user_paper_id:
+                # ── Filter to specific uploaded paper ────────
+                # $eq is required ChromaDB syntax (NOT eq)
+                # This returns ONLY chunks from that paper
+                user_results = user_col.query(
+                    query_embeddings = question_embedding,
+                    n_results        = N_RESULTS,
+                    where            = {
+                        "paper_id": {"$eq": user_paper_id}
+                    },
+                    include          = ["documents", "metadatas", "distances"]
+                )
+            else:
+                # ── Search ALL user papers (no filter) ───────
+                user_results = user_col.query(
+                    query_embeddings = question_embedding,
+                    n_results        = N_RESULTS,
+                    include          = ["documents", "metadatas", "distances"]
+                )
 
-    # Sort all results by distance (best matches first)
+            all_results.extend(
+                parse_query_results(user_results, source="user")
+            )
+
+        except Exception as e:
+            print(f"⚠️  user_papers search error: {e}")
+
+    # ── Sort all results by distance (best matches first) ────
     all_results.sort(key=lambda x: x["distance"])
-    # lambda x: x["distance"] = sort by distance value
-    # Lower distance = better match = comes first
 
-    # Filter out poor matches
+    
+    # ── Filter out poor matches ──────────────────────────────
     all_results = [r for r in all_results if r["distance"] < 1.0]
-    # Keep only results with distance < 1.0
-    # Higher distance = too different = not useful
 
-    # Return top N_RESULTS overall
+    
+    # ── Return top N_RESULTS overall ────────────────────────
     return all_results[:N_RESULTS]
 
 
@@ -147,6 +191,13 @@ def parse_query_results(results: dict, source: str) -> list[dict]:
 
     parsed = []
 
+    # Guard against empty results
+    if not results or not results.get("documents"):
+        return parsed
+
+    if not results["documents"][0]:
+        return parsed
+
     # results["documents"][0] = list of texts for our one question
     # results["metadatas"][0] = list of metadata dicts
     # results["distances"][0] = list of distance scores
@@ -170,14 +221,14 @@ def parse_query_results(results: dict, source: str) -> list[dict]:
 
             "related_jsons": meta.get("related_jsons", ""),
             # Comma-separated list of related JSON paper_ids
-            # Used to fetch structured data alongside text answer
 
             "distance":  round(dist, 4),
             # How similar this chunk is to the question
             # Rounded to 4 decimal places for readability
+            # relevance = 1 - distance (shown in UI)
 
             "source":    source
-            # "fsam" = from your pre-loaded papers
+            # "fsam" = from your pre-loaded 57 papers
             # "user" = from user uploaded paper
         })
 
@@ -186,13 +237,22 @@ def parse_query_results(results: dict, source: str) -> list[dict]:
 
 def retrieve(question: str,
              search_fsam: bool = True,
-             search_user: bool = True) -> dict:
+             search_user: bool = True,
+             user_paper_id: str = None) -> dict:
     """
     Main function — retrieves relevant passages for a question.
 
     Called by:
     - router.py when question needs RAG answer
     - answer_generator.py to get context for Groq
+
+    PARAMETERS:
+    ────────────
+    question      = user's natural language question
+    search_fsam   = True → include 57 pre-loaded FSAM papers
+    search_user   = True → include user uploaded papers
+    user_paper_id = filter user search to specific paper
+                    None = search all user papers
 
     Returns:
     {
@@ -212,7 +272,13 @@ def retrieve(question: str,
     """
 
     try:
-        passages = search_chunks(question, search_fsam, search_user)
+        passages = search_chunks(
+            question      = question,
+            search_fsam   = search_fsam,
+            search_user   = search_user,
+            user_paper_id = user_paper_id
+            # Passes paper_id filter down to search_chunks
+        )
 
         return {
             "question": question,
@@ -222,6 +288,7 @@ def retrieve(question: str,
         }
 
     except Exception as e:
+        print(f"❌ retrieve() error: {e}")
         return {
             "question": question,
             "passages": [],
@@ -237,29 +304,33 @@ if __name__ == "__main__":
     print("rag_retriever.py — Semantic Search Test")
     print("=" * 60)
 
-    test_questions = [
-        "Why does grain size decrease in AFSD?",
-        #"How does rotation speed affect microstructure?",
-        #"What is the recrystallization mechanism in FSAM?",
-        #"What happens when traverse velocity increases?",
-    ]
+    # Test 1: Search fsam_papers
+    print("\n--- Test 1: Search FSAM database ---")
+    result = retrieve(
+        question    = "Why does grain size decrease in AFSD?",
+        search_fsam = True,
+        search_user = False
+    )
 
-    for question in test_questions:
-        print(f"\n{'='*60}")
-        print(f"Q: {question}")
-        print(f"{'='*60}")
+    if result["error"]:
+        print(f"❌ Error: {result['error']}")
+    else:
+        print(f"Found {result['count']} passages:")
+        for i, p in enumerate(result["passages"], 1):
+            print(f"  [{i}] {p['paper_id']} | dist: {p['distance']} | {p['text'][:100]}...")
 
-        result = retrieve(question)
+    # Test 2: Search specific uploaded paper
+    print("\n--- Test 2: Search uploaded paper ---")
+    result = retrieve(
+        question      = "What is the main objective of this study?",
+        search_fsam   = False,
+        search_user   = True,
+        user_paper_id = "1_s2_0_S0264127525005660_main"  # ← 2025 paper
+    )
 
-        if result["error"]:
-            print(f"❌ Error: {result['error']}")
-            continue
-
-        print(f"Found {result['count']} relevant passages:\n")
-
-        for i, passage in enumerate(result["passages"], 1):
-            print(f"  [{i}] Paper: {passage['paper_id']}"
-                  f"  Distance: {passage['distance']}"
-                  f"  Source: {passage['source']}")
-            print(f"      {passage['text'][:150]}...")
-            print()
+    if result["error"]:
+        print(f"❌ Error: {result['error']}")
+    else:
+        print(f"Found {result['count']} passages:")
+        for i, p in enumerate(result["passages"], 1):
+            print(f"  [{i}] {p['paper_id']} | dist: {p['distance']} | {p['text'][:150]}...")
