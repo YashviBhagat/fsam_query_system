@@ -74,9 +74,10 @@ class SQLResponse(BaseModel):
     error:    str | None
 
 class AskRequest(BaseModel):
-    question:    str
-    search_user: bool = False
-    # search_user = True when user has uploaded a paper
+    question:      str
+    search_user:   bool = False
+    search_fsam:   bool = True
+    user_paper_id: str  = None
 
 class AskResponse(BaseModel):
     question:     str
@@ -216,9 +217,10 @@ def ask(request: AskRequest):
 
     try:
         result = route_question(
-            request.question,
-            search_user = request.search_user
-        )
+            question      = request.question,
+            search_user   = request.search_user,
+            search_fsam   = request.search_fsam,
+            user_paper_id = request.user_paper_id)
 
         return AskResponse(
             question     = result["question"],

@@ -278,12 +278,16 @@ with upload_col:
                     result = resp.json()
 
                     if resp.status_code == 200:
-                        # Auto activate uploaded paper
+                        result = resp.json()
+
+                        # Store paper info in session state
                         st.session_state.paper_uploaded    = True
                         st.session_state.active_paper_id   = result.get("paper_id")
                         st.session_state.active_paper_name = uploaded_file.name
+
                         st.success(
                             f"✓ {result['chunks_added']} sections indexed"
+                            f" | paper_id: {result.get('paper_id')}"  # ← show paper_id
                         )
                         st.rerun()
                     else:
@@ -293,6 +297,7 @@ with upload_col:
                     st.error(f"Error: {e}")
 
     # ── Active Paper Green Badge ───────────────────────────
+    # ── Active Paper Green Badge ───────────────────────────
     if st.session_state.get("paper_uploaded"):
         name    = st.session_state.get("active_paper_name", "")
         display = name[:38] + "..." if len(name) > 38 else name
@@ -301,6 +306,11 @@ with upload_col:
             f'📄 <strong>Active paper:</strong><br>{display}'
             f'</div>',
             unsafe_allow_html=True
+        )
+
+        # ── DEBUG LINE — shows paper_id on screen ─────────
+        st.caption(
+            f"🔑 paper_id: {st.session_state.get('active_paper_id')}"
         )
 
         if st.button("✕ Remove paper",
@@ -367,6 +377,7 @@ if search_triggered and question.strip():
 
     # Build payload based on which button was clicked
     if search_paper:
+        st.write("DEBUG paper_id:", st.session_state.get("active_paper_id"))
         payload      = {
             "question":      question,
             "search_user":   True,

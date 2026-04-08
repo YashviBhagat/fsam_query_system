@@ -17,7 +17,8 @@ RAG questions → ask for explanation/mechanism
 UPLOADED PAPER questions → ask about user's specific paper
     "What is the base alloy in the paper?"
     "What does this study conclude?"
-    → Skips SQL entirely, searches ONLY uploaded paper
+    → Skips SQL entirely
+    → Searches ONLY uploaded paper using paper_id filter
 """
 
 import os
@@ -38,18 +39,20 @@ MODEL  = "llama-3.3-70b-versatile"
 
 # ── TRIGGER WORDS ─────────────────────────────────────────────
 
-# These words → user is asking about their uploaded paper
-# When found + user has uploaded a paper → skip SQL, search uploaded paper only
 USER_PAPER_TRIGGERS = [
     "the paper", "this paper", "my paper",
     "uploaded paper", "the study", "this study",
     "the article", "this article", "the document",
     "in this", "in the paper", "from the paper",
     "the authors", "the researchers", "the uploaded",
-    "that paper", "this research", "the research"
+    "that paper", "this research", "the research",
+    "summary", "summarize", "summarise",
+    "conclusion", "conclusions", "objective",
+    "what does this", "what is this", "overview",
+    "main finding", "key finding", "what alloy",
+    "what process", "what method"
 ]
 
-# These words → use RAG pipeline
 RAG_TRIGGERS = [
     "why", "how", "explain", "mechanism", "reason",
     "cause", "effect", "what happens", "describe",
@@ -58,7 +61,6 @@ RAG_TRIGGERS = [
     "process", "behavior", "behaviour", "phenomenon"
 ]
 
-# These words → use SQL pipeline
 SQL_TRIGGERS = [
     "what is the", "what are the", "show", "list",
     "highest", "lowest", "maximum", "minimum",
@@ -73,14 +75,7 @@ SQL_TRIGGERS = [
 def classify_question(question: str) -> str:
     """
     Classifies question as "sql", "rag", or "both".
-
-    Rules:
-    RAG + SQL triggers found → "both"
-    Only RAG triggers        → "rag"
-    Only SQL triggers        → "sql"
-    Nothing found            → "rag" (safe default)
     """
-
     q       = question.lower()
     has_rag = any(trigger in q for trigger in RAG_TRIGGERS)
     has_sql = any(trigger in q for trigger in SQL_TRIGGERS)
@@ -121,7 +116,7 @@ Follow these rules:
 3. Use proper materials science terminology
 4. If passages don't fully answer the question, say so
 5. NEVER make up information not in the passages
-6. Answer ONLY from the provided passages — do NOT use general knowledge
+6. Answer ONLY from the provided passages
 7. If the answer is directly stated in a passage, state it clearly
 """
 
@@ -140,34 +135,42 @@ Please answer the question based ONLY on these passages."""
                 {"role": "user",   "content": user_message}
             ],
             temperature = 0.1,
-            # 0.1 = very deterministic
-            # Important for factual questions about uploaded paper
             max_tokens  = 600
         )
         return response.choices[0].message.content.strip()
 
     except Exception as e:
-        return f"Based on research papers:\n\n{passages_text}"
+        return f"Error generating answer: {str(e)}\n\nRaw passages:\n{passages_text}"
 
 
 # ── FUNCTION 3: Main Route Function ───────────────────────────
 
-def route_question(question: str, search_user: bool = False) -> dict:
+def route_question(
+    question:      str,
+    search_user:   bool = False,
+    search_fsam:   bool = True,
+    user_paper_id: str  = None
+) -> dict:
     """
     Main function — routes question to SQL, RAG, or both.
 
-    SPECIAL CASE:
-    If user asks about "the paper" / "this paper" / "uploaded paper"
-    AND they have uploaded a paper (search_user=True)
-    → Skip SQL entirely
-    → Search ONLY the uploaded paper
-    → Return answer from that paper only
+    Parameters:
+    ───────────
+    question      = user natural language question
+    search_user   = True → include uploaded paper collection
+    search_fsam   = True → include 57 FSAM database papers
+    user_paper_id = paper_id to filter uploaded paper search
+                    e.g. "1_s2_0_S026412752200418X_main"
+                    None = search all user papers
 
-    This prevents the system from answering about the database
-    when user clearly means their uploaded paper.
+    SPECIAL CASE — Search This Paper button:
+    When search_fsam=False and search_user=True
+    → Skip SQL entirely
+    → Search ONLY the specific uploaded paper
+    → Filter by user_paper_id
+    → paper_3, paper_5 etc will NEVER appear
     """
 
-    # Initialize result dict
     result = {
         "question":     question,
         "route":        "rag",
@@ -180,40 +183,75 @@ def route_question(question: str, search_user: bool = False) -> dict:
         "error":        None
     }
 
-    # ── SPECIAL CASE: Question about uploaded paper ───────────
-    # Check BEFORE normal routing so SQL never runs for these
     q_lower             = question.lower()
     asking_about_upload = any(t in q_lower for t in USER_PAPER_TRIGGERS)
 
-    if asking_about_upload and search_user:
-        # User is asking about their uploaded paper specifically
-        # Force RAG on user collection only — skip SQL and database
-        rag_result = retrieve(
-            question,
-            search_fsam = False,   # skip your 57 papers
-            search_user = True     # only search uploaded paper
-        )
-
-        result["route"]    = "rag"
-        result["passages"] = rag_result.get("passages", [])
-
-        if result["passages"]:
-            result["rag_answer"]   = format_rag_answer(
-                question,
-                result["passages"]
+    # ── CASE 1: User clicked "Search This Paper" ──────────────
+    # search_fsam=False means frontend explicitly said
+    # only search uploaded paper — skip database entirely
+    if search_user and not search_fsam:
+        try:
+            rag_result = retrieve(
+                question      = question,
+                search_fsam   = False,
+                search_user   = True,
+                user_paper_id = user_paper_id
             )
-            result["final_answer"] = result["rag_answer"]
-        else:
-            result["final_answer"] = (
-                "Could not find relevant information in your uploaded paper. "
-                "Try rephrasing your question."
-            )
+
+            result["route"]    = "rag"
+            result["passages"] = rag_result.get("passages", [])
+
+            if result["passages"]:
+                result["rag_answer"]   = format_rag_answer(
+                    question,
+                    result["passages"]
+                )
+                result["final_answer"] = result["rag_answer"]
+            else:
+                result["final_answer"] = (
+                    "Could not find relevant information in your "
+                    "uploaded paper. Try rephrasing your question "
+                    "or ask something more specific about the paper."
+                )
+        except Exception as e:
+            result["error"]        = f"RAG error: {str(e)}"
+            result["final_answer"] = f"Error searching paper: {str(e)}"
 
         return result
-        # Returns here — SQL never runs
 
-    # ── NORMAL ROUTING ────────────────────────────────────────
-    route          = classify_question(question)
+    # ── CASE 2: Question contains uploaded paper trigger words ─
+    # AND user has an active uploaded paper
+    if asking_about_upload and search_user and user_paper_id:
+        try:
+            rag_result = retrieve(
+                question      = question,
+                search_fsam   = False,
+                search_user   = True,
+                user_paper_id = user_paper_id
+            )
+
+            result["route"]    = "rag"
+            result["passages"] = rag_result.get("passages", [])
+
+            if result["passages"]:
+                result["rag_answer"]   = format_rag_answer(
+                    question,
+                    result["passages"]
+                )
+                result["final_answer"] = result["rag_answer"]
+            else:
+                result["final_answer"] = (
+                    "Could not find relevant information in your "
+                    "uploaded paper. Try rephrasing your question."
+                )
+        except Exception as e:
+            result["error"]        = f"RAG error: {str(e)}"
+            result["final_answer"] = f"Error: {str(e)}"
+
+        return result
+
+    # ── CASE 3: Normal database routing ───────────────────────
+    route           = classify_question(question)
     result["route"] = route
 
     # SQL path
@@ -233,9 +271,10 @@ def route_question(question: str, search_user: bool = False) -> dict:
     if route in ["rag", "both"]:
         try:
             rag_result = retrieve(
-                question,
-                search_fsam = True,
-                search_user = search_user
+                question      = question,
+                search_fsam   = search_fsam,
+                search_user   = search_user,
+                user_paper_id = user_paper_id
             )
 
             result["passages"] = rag_result.get("passages", [])
@@ -265,7 +304,9 @@ def route_question(question: str, search_user: bool = False) -> dict:
         result["final_answer"] = result["rag_answer"]
 
     if not result["final_answer"]:
-        result["final_answer"] = "Could not generate an answer. Try rephrasing."
+        result["final_answer"] = (
+            "Could not generate an answer. Try rephrasing."
+        )
 
     return result
 
@@ -279,17 +320,16 @@ if __name__ == "__main__":
     print("=" * 60)
 
     test_questions = [
-        ("What is the hardness of AA6061?",               "expect: sql"),
-        ("Which alloy has the highest UTS?",              "expect: sql"),
-        ("Why does grain size decrease in AFSD?",         "expect: rag"),
-        ("How does rotation speed affect microstructure?","expect: rag"),
-        ("What is hardness of AA6061 and why is it high?","expect: both"),
+        ("What is the hardness of AA6061?",                "expect: sql"),
+        ("Which alloy has the highest UTS?",               "expect: sql"),
+        ("Why does grain size decrease in AFSD?",          "expect: rag"),
+        ("How does rotation speed affect microstructure?", "expect: rag"),
+        ("What is hardness of AA6061 and why is it high?", "expect: both"),
     ]
 
     for question, expectation in test_questions:
         print(f"\n{'='*60}")
         print(f"Q: {question}  ({expectation})")
-
         result = route_question(question)
         print(f"Route: {result['route'].upper()}")
 
